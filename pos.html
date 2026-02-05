@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto de Venta - Nayliz FP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="pos-fullpage">
+    <!-- Header del POS -->
+    <header class="pos-page-header">
+        <div class="pos-header-left">
+            <button class="btn-back-home" onclick="volverAlMenu()">
+                ← Volver al Menú
+            </button>
+            <h1>PUNTO DE VENTA</h1>
+        </div>
+        <div class="pos-header-right">
+            <div class="pos-dolar-display">
+                <span class="dolar-label">Tasa:</span>
+                <span class="dolar-value" id="tasaDolarPOS">Bs 36.50</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal del POS -->
+    <div class="pos-main-container">
+        <!-- Panel Izquierdo - Búsqueda de Productos -->
+        <div class="pos-left-panel">
+            <div class="search-section">
+                <h3>🔍 Buscador de productos</h3>
+                <input type="text" id="buscarProductoPOS" class="pos-search-input" 
+                       placeholder="Buscar por código o nombre..." oninput="buscarEnPOS(this.value)">
+            </div>
+            
+            <!-- Resultados de Búsqueda -->
+            <div class="productos-disponibles">
+                <div id="resultados-busqueda" class="resultados-lista">
+                    <div class="no-products">Busca un producto para agregar a la venta</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel Derecho - Carrito -->
+        <div class="pos-right-panel">
+            <!-- Tabla de Productos en el Carrito -->
+            <div class="productos-agregados-section-full">
+                <h3>🛒 Productos en el Carrito</h3>
+                <div class="table-wrapper">
+                    <table class="pos-carrito-table" id="tabla-carrito">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Precio $</th>
+                                <th>Precio Bs</th>
+                                <th>Total Bs</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="carritoProductos">
+                            <tr>
+                                <td colspan="8" class="carrito-vacio">No hay productos en el carrito</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Totales y Botones -->
+            <div class="totales-section-pos-simple">
+                <!-- Monto Total a Pagar -->
+                <div class="monto-total-display">
+                    <div class="monto-label">MONTO TOTAL A PAGAR:</div>
+                    <div class="monto-valores">
+                        <span class="monto-dolares" id="total-usd">$0.00</span>
+                        <span class="monto-bolivares" id="total-bs">Bs 0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Botones de Acción -->
+                <div class="action-buttons-pos">
+                    <button class="btn-pos btn-procesar" onclick="procesarVenta()">
+                        💳 Finalizar Venta
+                    </button>
+                    <button class="btn-pos btn-limpiar" onclick="limpiarCarrito()">
+                        🗑️ Limpiar Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

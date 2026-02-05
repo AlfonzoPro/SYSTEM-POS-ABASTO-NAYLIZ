@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas Bodega</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Barra Superior Amarilla con Botones -->
+    <header class="top-bar">
+        <div class="top-buttons">
+            <button class="big-button btn-venta" onclick="abrirPOS()">
+                <div class="button-icon">🛒</div>
+            </button>
+            
+            <button class="big-button btn-inventario" onclick="cargarPlantilla('inventario')">
+                <div class="button-icon">📋</div>
+            </button>
+        </div>
+        
+        <div class="company-title">
+            <h1>ABASTOS E INVERSIONES NAYLIZ FP</h1>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <!-- Panel Lateral Izquierdo - Tasas de Cambio -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Tasas de Cambio</h3>
+            </div>
+            
+            <div class="currency-section">
+                <div class="currency-label">Bolívares</div>
+            </div>
+            
+            <div class="currency-section rate-display-section">
+                <div class="rate-display-box" ondblclick="editarTasaDolar()">
+                    <span class="rate-label">Bs $ / VES = </span>
+                    <input type="number" id="tasa-input" class="rate-value-input" step="0.01" onchange="actualizarTasa(this.value)" value="36.50">
+                    <span class="rate-hint">✏️</span>
+                </div>
+            </div>
+            
+            <!-- Facturas Generadas en el Día -->
+            <div class="sidebar-section-facturas">
+                <div class="facturas-header">
+                    <h3>Facturas Generadas Hoy</h3>
+                </div>
+                <div class="facturas-content">
+                    <div class="factura-stat-single">
+                        <span class="factura-value-large" id="facturasHoy">0</span>
+                        <span class="factura-label-small">Facturas</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botón Ver Días Anteriores -->
+            <div class="sidebar-button-section">
+                <button class="btn-ver-dias-sidebar" onclick="abrirBuscadorFechas()">
+                    📅 Buscar Días Anteriores
+                </button>
+            </div>
+        </aside>
+
+        <!-- Panel Central - Contenido Dinámico -->
+        <main id="contenedor-dinamico" class="content-area">
+            <div class="content-header">
+                <h2>RESUMEN DE VENTA DIARIO</h2>
+            </div>
+            
+            <div class="summary-box">
+                <!-- Total Efectivo Registrado -->
+                <div class="efectivo-registrado">
+                    <div class="efectivo-title">Total efectivo registrado:</div>
+                    <div class="efectivo-amounts">
+                        <div class="amount-line">
+                            <span id="efectivoDolares">$0.00</span>
+                        </div>
+                        <div class="amount-line">
+                            <span id="efectivoBolivares">Bs 0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Otros Medios de Pago -->
+                <div class="payment-methods-section">
+                    <div class="payment-methods-header">
+                        <span>-- Otros medios de pagos registrados --</span>
+                        <span class="monto-header">Monto</span>
+                    </div>
+                    
+                    <div class="payment-method-row">
+                        <span class="method-name">BIOPAGO</span>
+                        <span class="method-amount" id="biopago">$0.00</span>
+                    </div>
+                    
+                    <div class="payment-method-row">
+                        <span class="method-name">PUNTO DE VENTA</span>
+                        <span class="method-amount" id="puntoVenta">$0.00</span>
+                    </div>
+                    
+                    <div class="payment-method-row">
+                        <span class="method-name">PAGO MOVIL</span>
+                        <span class="method-amount" id="pagoMovil">$0.00</span>
+                    </div>
+                    
+                    <div class="payment-method-row">
+                        <span class="method-name">NOTA CREDITO</span>
+                        <span class="method-amount" id="notaCredito">$0.00</span>
+                    </div>
+                    
+                    <!-- Total de Todos los Pagos -->
+                    <div class="payment-total-row">
+                        <span class="total-payments-label">TOTAL PAGOS RECIBIDOS:</span>
+                        <span class="total-payments-amount" id="totalPagos">Bs 0.00</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

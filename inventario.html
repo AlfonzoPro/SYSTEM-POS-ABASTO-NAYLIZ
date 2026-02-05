@@ -1,0 +1,130 @@
+<div class="modulo-inventario-full">
+    <div class="modal-header">
+        <h2>📋 GESTIÓN DE INVENTARIO</h2>
+    </div>
+    
+    <div class="modal-body">
+        <div class="form-section">
+            <h3>Agregar Nuevo Producto</h3>
+            <form id="formProducto" class="product-form" onsubmit="guardarEnInventario(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código:</label>
+                        <input type="text" id="codigoProducto" class="form-input" 
+                               placeholder="Auto-generado" readonly>
+                    </div>
+                    <div class="form-group flex-2">
+                        <label>Nombre del Producto:</label>
+                        <input type="text" id="inv-nombre" class="form-input" 
+                               placeholder="Ej: HARINA PAN 1KG" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Precio Costo ($):</label>
+                        <input type="number" id="inv-costo" class="form-input" 
+                               step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio Venta ($):</label>
+                        <input type="number" id="inv-precio" class="form-input" 
+                               step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-agregar">
+                            <span>+</span> Agregar Producto
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="productos-section">
+            <div class="productos-header-section">
+                <h3>Lista de Productos en Inventario</h3>
+                <div class="search-box">
+                    <input type="text" id="buscarProducto" class="search-input" 
+                           placeholder="🔍 Buscar producto por código o nombre..."
+                           oninput="filtrarInventario(this.value)">
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="productos-table" id="tabla-stock">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre del Producto</th>
+                            <th>Costo ($)</th>
+                            <th>Venta ($)</th>
+                            <th>Ganancia ($)</th>
+                            <th>Ganancia %</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaProductos">
+                        <tr>
+                            <td colspan="7" class="sin-productos">No hay productos registrados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Modificación de Producto -->
+<div id="modalModificar" class="modal-overlay" style="display: none;">
+    <div class="modal-modificar">
+        <div class="modal-modificar-header">
+            <h2>✏️ Modificar Producto</h2>
+        </div>
+        <div class="modal-modificar-body">
+            <div class="form-modificar">
+                <div class="form-group-modificar">
+                    <label>Código:</label>
+                    <input type="text" id="mod-codigo" class="input-modificar" readonly>
+                </div>
+                
+                <div class="form-group-modificar">
+                    <label>Nombre del Producto:</label>
+                    <input type="text" id="mod-nombre" class="input-modificar" placeholder="Nombre del producto">
+                </div>
+                
+                <div class="form-row-modificar">
+                    <div class="form-group-modificar">
+                        <label>Precio Costo ($):</label>
+                        <input type="number" id="mod-costo" class="input-modificar" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                    
+                    <div class="form-group-modificar">
+                        <label>Precio Venta ($):</label>
+                        <input type="number" id="mod-precio" class="input-modificar" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div class="ganancia-info">
+                    <div class="ganancia-item">
+                        <span class="ganancia-label">Ganancia:</span>
+                        <span class="ganancia-valor" id="mod-ganancia-valor">$0.00</span>
+                    </div>
+                    <div class="ganancia-item">
+                        <span class="ganancia-label">Ganancia %:</span>
+                        <span class="ganancia-valor" id="mod-ganancia-porcentaje">0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-modificar-buttons">
+                <button class="btn-mod btn-confirmar" onclick="confirmarModificacion()">
+                    ✓ Confirmar Cambios
+                </button>
+                <button class="btn-mod btn-volver" onclick="cerrarModalModificar()">
+                    ← Volver
+                </button>
+                <button class="btn-mod btn-eliminar" onclick="eliminarProductoDesdeModal()">
+                    🗑️ Eliminar Producto
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
