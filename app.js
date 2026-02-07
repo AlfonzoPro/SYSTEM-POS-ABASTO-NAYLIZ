@@ -11,6 +11,7 @@ let productosPOS = [];
 let productoEnCantidad = null; // Para el modal de cantidad
 let pagosAgregados = []; // Para el sistema de pagos mixtos
 let totalVentaActual = 0; // Total de la venta actual en USD
+let indiceCarritoEdicion = -1; // Nueva variable global
 
 // ==========================================
 // INICIALIZACIÓN
@@ -70,7 +71,8 @@ async function cargarVentasDelDia() {
 }
 
 function actualizarResumenDelDia() {
-    let totalEfectivoDolares = 0;
+    let efectivoSoloDolares = 0;   // Monto de pagos EFECTIVO_USD
+    let efectivoSoloBolivares = 0; // Monto de pagos EFECTIVO_BS
     let totalBiopago = 0;
     let totalPuntoVenta = 0;
     let totalPagoMovil = 0;
@@ -78,12 +80,14 @@ function actualizarResumenDelDia() {
     
     ventasDelDia.forEach(venta => {
         if (venta.mediosPago && Array.isArray(venta.mediosPago)) {
-            // Nueva estructura con medios de pago desglosados
             venta.mediosPago.forEach(pago => {
                 switch(pago.metodo) {
                     case 'EFECTIVO_USD':
+                        efectivoSoloDolares += pago.montoUSD;
+                        break;
                     case 'EFECTIVO_BS':
-                        totalEfectivoDolares += pago.montoUSD;
+                        // Aquí sumamos los Bolívares reales registrados
+                        efectivoSoloBolivares += (pago.montoBs || (pago.montoUSD * venta.precioDolarUsado));
                         break;
                     case 'BIOPAGO':
                         totalBiopago += pago.montoUSD;
@@ -100,29 +104,22 @@ function actualizarResumenDelDia() {
                         break;
                 }
             });
-        } else {
-            // Estructura antigua (compatibilidad)
-            totalEfectivoDolares += venta.totalDolares || 0;
         }
     });
     
-    const efectivoDolares = document.getElementById('efectivoDolares');
-    const efectivoBolivares = document.getElementById('efectivoBolivares');
-    const biopago = document.getElementById('biopago');
-    const puntoVenta = document.getElementById('puntoVenta');
-    const pagoMovil = document.getElementById('pagoMovil');
-    const notaCredito = document.getElementById('notaCredito');
-    const totalPagos = document.getElementById('totalPagos');
+    // Calcular total general convertido a dólares para el balance
+    const totalGeneralUSD = efectivoSoloDolares + (efectivoSoloBolivares / tasaDolar) + 
+                          totalBiopago + totalPuntoVenta + totalPagoMovil + totalNotaCredito;
+
+    // Mostrar en pantalla
+    document.getElementById('efectivoDolares').textContent = `$${efectivoSoloDolares.toFixed(2)}`;
+    document.getElementById('efectivoBolivares').textContent = `Bs ${efectivoSoloBolivares.toFixed(2)}`;
     
-    const totalGeneral = totalEfectivoDolares + totalBiopago + totalPuntoVenta + totalPagoMovil + totalNotaCredito;
-    
-    if (efectivoDolares) efectivoDolares.textContent = `$${totalEfectivoDolares.toFixed(2)}`;
-    if (efectivoBolivares) efectivoBolivares.textContent = `Bs ${(totalEfectivoDolares * tasaDolar).toFixed(2)}`;
-    if (biopago) biopago.textContent = `$${totalBiopago.toFixed(2)}`;
-    if (puntoVenta) puntoVenta.textContent = `$${totalPuntoVenta.toFixed(2)}`;
-    if (pagoMovil) pagoMovil.textContent = `$${totalPagoMovil.toFixed(2)}`;
-    if (notaCredito) notaCredito.textContent = `$${totalNotaCredito.toFixed(2)}`;
-    if (totalPagos) totalPagos.textContent = `$${totalGeneral.toFixed(2)}`;
+    document.getElementById('biopago').textContent = `$${totalBiopago.toFixed(2)}`;
+    document.getElementById('puntoVenta').textContent = `$${totalPuntoVenta.toFixed(2)}`;
+    document.getElementById('pagoMovil').textContent = `$${totalPagoMovil.toFixed(2)}`;
+    document.getElementById('notaCredito').textContent = `$${totalNotaCredito.toFixed(2)}`;
+    document.getElementById('totalPagos').textContent = `$${totalGeneralUSD.toFixed(2)}`;
 }
 
 // ==========================================
@@ -486,18 +483,16 @@ function actualizarInterfazCarrito() {
         totalUsd += subtotalUsd;
         
         return `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${item.codigo}</td>
-                <td>${item.nombre}</td>
-                <td>
-                    <input type="number" value="${item.cantidad}" min="1" 
-                           class="input-cantidad-carrito"
-                           onchange="cambiarCantidad(${index}, this.value)">
+            <tr class="fila-carrito-clicable">
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">${index + 1}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">${item.codigo}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">${item.nombre}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})" class="col-cantidad-fija">
+                    <span class="badge-cantidad">${item.cantidad}</span>
                 </td>
-                <td>$${item.precioVenta.toFixed(2)}</td>
-                <td>Bs ${precioBs.toFixed(2)}</td>
-                <td>Bs ${subtotalBs.toFixed(2)}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">$${item.precioVenta.toFixed(2)}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">Bs ${precioBs.toFixed(2)}</td>
+                <td onclick="abrirModalCantidad(${item.codigo}, ${index})">Bs ${subtotalBs.toFixed(2)}</td>
                 <td>
                     <button class="btn-eliminar-item" onclick="quitarDelCarrito(${index})">
                         ❌
@@ -709,35 +704,34 @@ function actualizarSeleccion(resultados) {
 // ==========================================
 // MODAL DE CANTIDAD DE PRODUCTO
 // ==========================================
-function abrirModalCantidad(codigo) {
+function abrirModalCantidad(codigo, indexEnCarrito = -1) {
     const producto = inventario.find(p => p.codigo === codigo);
     if (!producto) return;
     
     productoEnCantidad = producto;
+    indiceCarritoEdicion = indexEnCarrito; // Guardamos si es una edición
     
-    // Llenar datos del modal
     document.getElementById('nombreProductoCantidad').textContent = producto.nombre;
     document.getElementById('codigoProductoCantidad').textContent = `Cód: ${producto.codigo}`;
     document.getElementById('precioDolarCantidad').textContent = `$${producto.precioVenta.toFixed(2)}`;
     document.getElementById('precioBsCantidad').textContent = `Bs ${(producto.precioVenta * tasaDolar).toFixed(2)}`;
     
-    // Resetear cantidad a 1
+    // Si estamos editando, ponemos la cantidad que ya tiene el carrito
     const inputCantidad = document.getElementById('inputCantidadProducto');
-    inputCantidad.value = '1';
+    if (indiceCarritoEdicion > -1) {
+        inputCantidad.value = carrito[indiceCarritoEdicion].cantidad;
+    } else {
+        inputCantidad.value = '1';
+    }
     
-    // Calcular total inicial
     actualizarTotalCantidad();
-    
-    // Mostrar modal
     document.getElementById('modalCantidadProducto').style.display = 'flex';
     
-    // Focus en el input y seleccionar todo
     setTimeout(() => {
         inputCantidad.focus();
         inputCantidad.select();
     }, 100);
-    
-    // Eventos del input
+
     inputCantidad.oninput = actualizarTotalCantidad;
     inputCantidad.onkeydown = (e) => {
         if (e.key === 'Enter') confirmarCantidadProducto();
@@ -767,19 +761,23 @@ function confirmarCantidadProducto() {
     
     if (!productoEnCantidad) return;
     
-    // Buscar si ya existe en el carrito
-    const itemEnCarrito = carrito.find(c => c.codigo === productoEnCantidad.codigo);
-    
-    if (itemEnCarrito) {
-        itemEnCarrito.cantidad += cantidad;
+    if (indiceCarritoEdicion > -1) {
+        // CASO 1: Estamos EDITANDO un producto que ya estaba en el carrito
+        carrito[indiceCarritoEdicion].cantidad = cantidad;
     } else {
-        carrito.push({ ...productoEnCantidad, cantidad: cantidad });
+        // CASO 2: Estamos AGREGANDO uno nuevo desde el buscador
+        const itemEnCarrito = carrito.find(c => c.codigo === productoEnCantidad.codigo);
+        if (itemEnCarrito) {
+            itemEnCarrito.cantidad += cantidad;
+        } else {
+            carrito.push({ ...productoEnCantidad, cantidad: cantidad });
+        }
     }
     
     actualizarInterfazCarrito();
     cancelarCantidadProducto();
     
-    // Limpiar búsqueda
+    // Limpiar buscador si veníamos de allí
     const buscarInput = document.getElementById('buscarProductoPOS');
     if (buscarInput) {
         buscarInput.value = '';
@@ -787,8 +785,6 @@ function confirmarCantidadProducto() {
     }
     const resultados = document.getElementById('resultados-busqueda');
     if (resultados) resultados.innerHTML = '<div class="no-products">Busca un producto para agregar a la venta</div>';
-    
-    indiceSeleccionado = -1;
 }
 
 function cancelarCantidadProducto() {
@@ -836,23 +832,20 @@ function seleccionarMetodoPago(metodo) {
     const labelMoneda = document.getElementById('labelMonedaInput');
     const selectMetodo = document.getElementById('metodoPago');
 
-    // Sincronizar el select por si la función fue llamada por atajo de teclado
     selectMetodo.value = metodo;
 
-    // Calcular faltante real
     const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
     const faltanteUSD = totalVentaActual - totalPagadoUSD;
 
     if (metodo === 'EFECTIVO_USD') {
         inputMonto.value = faltanteUSD > 0 ? faltanteUSD.toFixed(2) : "0.00";
-        labelMoneda.textContent = "Monto en Dólares ($):";
+        labelMoneda.textContent = "Monto en $:";
     } else {
         const faltanteBS = (faltanteUSD > 0 ? faltanteUSD : 0) * tasaDolar;
         inputMonto.value = faltanteBS.toFixed(2);
-        labelMoneda.textContent = "Monto en Bolívares (Bs):";
+        labelMoneda.textContent = "Monto en Bs:";
     }
 
-    // Poner foco en el monto para solo dar Enter
     inputMonto.focus();
     setTimeout(() => inputMonto.select(), 10);
 }
@@ -1157,28 +1150,3 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
-function seleccionarMetodoPago(metodo) {
-    const select = document.getElementById('metodoPago');
-    const inputMonto = document.getElementById('montoPago');
-    const labelMoneda = document.getElementById('labelMonedaInput');
-    
-    select.value = metodo;
-
-    // Calcular cuánto falta
-    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
-    const faltanteUSD = totalVentaActual - totalPagadoUSD;
-
-    // Auto-completar el monto
-    if (metodo === 'EFECTIVO_USD') {
-        inputMonto.value = faltanteUSD > 0 ? faltanteUSD.toFixed(2) : "0.00";
-        labelMoneda.textContent = "Monto USD ($):";
-    } else {
-        const faltanteBS = faltanteUSD * tasaDolar;
-        inputMonto.value = faltanteBS > 0 ? faltanteBS.toFixed(2) : "0.00";
-        labelMoneda.textContent = "Monto Bs:";
-    }
-
-    // Seleccionar el texto para que el usuario pueda escribir encima si desea
-    inputMonto.focus();
-    setTimeout(() => inputMonto.select(), 10);
-}

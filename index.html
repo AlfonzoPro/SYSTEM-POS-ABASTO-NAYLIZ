@@ -67,59 +67,47 @@
 
         <!-- Panel Central - Contenido Dinámico -->
         <main id="contenedor-dinamico" class="content-area">
-            <div class="content-header">
-                <h2>RESUMEN DE VENTA DIARIO</h2>
+    <div class="content-header">
+        <h2>RESUMEN DE VENTA DIARIO</h2>
+    </div>
+
+    <!-- Contenedor que ahora ocupará todo el ancho -->
+    <div class="resumen-ventas-full-width">
+        
+        <!-- BLOQUE DE EFECTIVO (Estilo imagen, ancho completo) -->
+        <div class="card-efectivo-negra">
+            <span class="titulo-efectivo">Total efectivo registrado:</span>
+            <div class="monto-grande" id="efectivoDolares">$0.00</div>
+            <div class="monto-grande" id="efectivoBolivares">Bs 0.00</div>
+        </div>
+
+        <!-- OTROS MÉTODOS -->
+        <div class="lista-otros-pagos">
+            <div class="item-pago">
+                <span class="metodo-tag">BIOPAGO</span>
+                <span class="metodo-monto" id="biopago">$0.00</span>
             </div>
-            
-            <div class="summary-box">
-                <!-- Total Efectivo Registrado -->
-                <div class="efectivo-registrado">
-                    <div class="efectivo-title">Total efectivo registrado:</div>
-                    <div class="efectivo-amounts">
-                        <div class="amount-line">
-                            <span id="efectivoDolares">$0.00</span>
-                        </div>
-                        <div class="amount-line amount-bs">
-                            <span id="efectivoBolivares">Bs 0.00</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Otros Medios de Pago -->
-                <div class="payment-methods-section">
-                    <div class="payment-methods-header">
-                        <span>-- Otros medios de pagos registrados --</span>
-                        <span class="monto-header">Monto</span>
-                    </div>
-                    
-                    <div class="payment-method-row">
-                        <span class="method-name">BIOPAGO</span>
-                        <span class="method-amount" id="biopago">$0.00</span>
-                    </div>
-                    
-                    <div class="payment-method-row">
-                        <span class="method-name">PUNTO DE VENTA</span>
-                        <span class="method-amount" id="puntoVenta">$0.00</span>
-                    </div>
-                    
-                    <div class="payment-method-row">
-                        <span class="method-name">PAGO MOVIL</span>
-                        <span class="method-amount" id="pagoMovil">$0.00</span>
-                    </div>
-                    
-                    <div class="payment-method-row">
-                        <span class="method-name">NOTA CREDITO</span>
-                        <span class="method-amount" id="notaCredito">$0.00</span>
-                    </div>
-                    
-                    <!-- Total de Todos los Pagos -->
-                    <div class="payment-total-row">
-                        <span class="total-payments-label">TOTAL PAGOS RECIBIDOS:</span>
-                        <span class="total-payments-amount" id="totalPagos">$0.00</span>
-                    </div>
-                </div>
+            <div class="item-pago">
+                <span class="metodo-tag">PUNTO DE VENTA</span>
+                <span class="metodo-monto" id="puntoVenta">$0.00</span>
             </div>
-        </main>
+            <div class="item-pago">
+                <span class="metodo-tag">PAGO MÓVIL</span>
+                <span class="metodo-monto" id="pagoMovil">$0.00</span>
+            </div>
+            <div class="item-pago">
+                <span class="metodo-tag">NOTA CRÉDITO</span>
+                <span class="metodo-monto" id="notaCredito">$0.00</span>
+            </div>
+        </div>
+
+        <!-- TOTAL GENERAL -->
+        <div class="total-barra-final">
+            <span class="total-label">TOTAL PAGOS RECIBIDOS:</span>
+            <span class="total-monto" id="totalPagos">$0.00</span>
+        </div>
+    </div>
+</main>
     </div>
 
     <!-- Modal para Editar Tasa del Dólar -->

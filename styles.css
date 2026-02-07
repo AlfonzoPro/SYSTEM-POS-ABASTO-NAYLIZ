@@ -217,36 +217,265 @@ body {
 /* ==========================================
    ÁREA DE CONTENIDO
    ========================================== */
+/* ==========================================
+   RESUMEN VERTICAL COMPACTO (SIN SCROLL)
+   ========================================== */
+
+/* Contenedor principal sin desperdicio de espacio */
+/* --- ÁREA DE CONTENIDO (PANEL CENTRAL) --- */
 .content-area {
-    flex: 1;
+    flex: 1; /* Esto hace que ocupe todo el resto de la pantalla */
     background: #0f1535;
-    padding: 30px;
-    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita el scroll */
+    width: 100%;     /* Asegura que use todo el ancho */
+}
+
+/* --- TÍTULO AMARILLO (ANCHO COMPLETO) --- */
+.content-header {
+    background: #ffeb3b;
+    padding: 12px 25px;
+    margin: -20px -20px 20px -20px; /* Expande hasta los bordes del content-area */
+    border-bottom: 3px solid #000;
+}
+
+/* --- CONTENEDOR DE RESUMEN --- */
+.resumen-ventas-full-width {
+    width: 100%; /* AQUÍ ESTÁ EL TRUCO: Ocupa el 100% de la derecha */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- BLOQUE DE EFECTIVO (ESTILO IMAGEN) --- */
+.card-efectivo-negra {
+    background: #2d2d2d; /* El gris oscuro que querías */
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px 30px;
+    width: 100%; /* Estira hasta la derecha */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.titulo-efectivo {
+    color: #aaa;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.monto-grande {
+    color: #ffffff;
+    font-size: 32px; /* Un poco más grande para llenar el espacio */
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+}
+
+/* --- OTROS PAGOS --- */
+.lista-otros-pagos {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.item-pago {
+    background: #1a2555;
+    padding: 12px 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between; /* Empuja el nombre a la izq y monto a la der */
+    align-items: center;
+    border: 1px solid #2a3f7f;
+    width: 100%;
+}
+
+.metodo-tag {
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.metodo-monto {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* --- BARRA TOTAL --- */
+.total-barra-final {
+    margin-top: auto; /* Se pega al fondo de la vista */
+    background: #10b981;
+    padding: 18px 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+}
+
+.total-label {
+    font-size: 20px;
+    font-weight: 1000;
+    color: #fff;
+}
+
+.total-monto {
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
 }
 
 .content-header {
     background: #ffeb3b;
-    padding: 15px 30px;
-    margin: -30px -30px 30px -30px;
-    border-bottom: 3px solid #000;
+    padding: 8px 20px;
+    margin: -15px -15px 15px -15px;
+    border-bottom: 2px solid #000;
 }
 
 .content-header h2 {
+    font-size: 18px; /* Más pequeño para ahorrar altura */
     color: #000;
-    font-size: 24px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
 }
 
-/* Summary Box */
-.summary-box {
-    background: #1a2555;
-    border-radius: 15px;
-    padding: 30px;
-    border: 2px solid #2a3f7f;
-    max-height: calc(100vh - 250px);
+.resumen-vertical-container {
     display: flex;
     flex-direction: column;
+    gap: 8px; /* Espacio mínimo entre filas */
+    height: 100%;
+}
+
+/* Filas base */
+.fila-resumen {
+    background: #1a2555;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2a3f7f;
+}
+
+/* Fila de Efectivo (más destacada) */
+/* Estilos para el efectivo dividido */
+.fila-resumen.principal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px !important; /* Más compacto */
+}
+
+.desglose-efectivo {
+    display: flex;
+    flex-direction: column; /* Uno arriba del otro */
+    gap: 4px;
+    text-align: right;
+}
+
+.item-efectivo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.moneda-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #94a3b8;
+}
+
+.monto-valor {
+    font-family: 'Courier New', Courier, monospace; /* Estilo contable */
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.monto-valor.verde { color: #10b981; }
+.monto-valor.cian { color: #22d3ee; }
+
+/* Ajuste de otros pagos para que sean más finos y no generen scroll */
+.otros-pagos-lista .fila-resumen {
+    padding: 6px 20px;
+    margin-bottom: 2px;
+}
+
+.fila-resumen.principal .etiqueta {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.fila-resumen.principal .monto-usd {
+    font-size: 28px;
+    font-weight: 900;
+    color: #10b981;
+    margin-right: 15px;
+}
+
+.fila-resumen.principal .monto-bs {
+    font-size: 18px;
+    color: #6ee7b7;
+}
+
+/* Lista de otros pagos más compacta */
+.otros-pagos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.otros-pagos-lista .fila-resumen {
+    padding: 8px 20px; /* Muy compacto */
+    background: #161e44;
+}
+
+.metodo-nombre {
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.metodo-monto {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Fila de Total Final */
+.fila-total-final {
+    margin-top: auto; /* Empuja el total al fondo pero dentro de la vista */
+    background: #10b981;
+    padding: 15px 25px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    font-weight: 900;
+}
+
+.fila-total-final span:first-child {
+    font-size: 14px;
+}
+
+.fila-total-final #totalPagos {
+    font-size: 28px;
+}
+
+/* Ajuste para pantallas con poca altura */
+@media (max-height: 750px) {
+    .fila-resumen { padding: 6px 15px; }
+    .fila-resumen.principal .monto-usd { font-size: 22px; }
+    .fila-total-final { padding: 10px 20px; }
+    .fila-total-final #totalPagos { font-size: 22px; }
 }
 
 .efectivo-registrado {
@@ -345,32 +574,8 @@ body {
 }
 
 /* ==========================================
-   MÓDULO DE INVENTARIO
+   MODULO DE INVENTARIO
    ========================================== */
-.modulo-inventario-full {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-header {
-    background: #1e3a8a;
-    padding: 20px 30px;
-    margin: -30px -30px 30px -30px;
-    border-bottom: 3px solid #3b82f6;
-}
-
-.modal-header h2 {
-    color: #fff;
-    font-size: 24px;
-    font-weight: 900;
-}
-
-.modal-body {
-    flex: 1;
-    overflow-y: auto;
-}
-
 .form-section {
     background: #1a2555;
     padding: 25px;
@@ -558,22 +763,62 @@ body {
 }
 
 /* ==========================================
-   MÓDULO DE PUNTO DE VENTA (POS)
+   POS PÁGINA COMPLETA
    ========================================== */
-.modulo-pos-full {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.pos-fullpage {
+    background: #0a0e27;
+    overflow: auto;
 }
 
-.pos-header-bar {
-    background: #1e3a8a;
-    padding: 15px 30px;
-    margin: -30px -30px 20px -30px;
+.pos-page-header {
+    background: linear-gradient(180deg, #ffeb3b 0%, #fdd835 100%);
+    height: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid #3b82f6;
+    padding: 0 30px;
+    border-bottom: 4px solid #000;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+
+.pos-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-back-home {
+    padding: 12px 25px;
+    background: #fff;
+    color: #000;
+    border: 3px solid #000;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 0px #000;
+}
+
+.btn-back-home:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0px #000;
+}
+
+.btn-back-home:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0px #000;
+}
+
+.pos-page-header h1 {
+    color: #000;
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.pos-header-right {
+    display: flex;
+    gap: 20px;
 }
 
 .pos-dolar-display {
@@ -597,20 +842,29 @@ body {
     font-weight: bold;
 }
 
-.modal-body-pos-full {
-    flex: 1;
+.pos-main-container {
     display: flex;
     gap: 20px;
-    overflow: hidden;
+    padding: 20px;
+    height: calc(100vh - 90px);
 }
 
-/* Panel Izquierdo - Búsqueda */
+.pos-left-panel,
+.pos-right-panel {
+    background: #1a2555;
+    border-radius: 15px;
+    padding: 25px;
+    border: 2px solid #2a3f7f;
+}
+
 .pos-left-panel {
     flex: 1;
-    background: #1a2555;
-    border-radius: 10px;
-    padding: 20px;
-    border: 2px solid #2a3f7f;
+    display: flex;
+    flex-direction: column;
+}
+
+.pos-right-panel {
+    flex: 1.5;
     display: flex;
     flex-direction: column;
 }
@@ -708,17 +962,6 @@ body {
     font-style: italic;
 }
 
-/* Panel Derecho - Carrito */
-.pos-right-panel {
-    flex: 1.5;
-    background: #1a2555;
-    border-radius: 10px;
-    padding: 20px;
-    border: 2px solid #2a3f7f;
-    display: flex;
-    flex-direction: column;
-}
-
 .productos-agregados-section-full {
     flex: 1;
     overflow-y: auto;
@@ -765,31 +1008,12 @@ body {
     padding: 40px !important;
 }
 
-.input-cantidad-carrito {
-    width: 60px;
-    padding: 5px;
-    background: #0f1535;
-    border: 1px solid #2a3f7f;
-    border-radius: 4px;
-    color: #fff;
-    text-align: center;
+.table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
 }
 
-.btn-eliminar-item {
-    padding: 5px 10px;
-    background: #f44336;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-eliminar-item:hover {
-    background: #d32f2f;
-}
-
-/* Totales y Botones */
 .totales-section-pos-simple {
     background: #252f5f;
     padding: 15px 20px;
@@ -891,98 +1115,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #4a5585;
-}
-
-/* ==========================================
-   POS PÁGINA COMPLETA
-   ========================================== */
-.pos-fullpage {
-    background: #0a0e27;
-    overflow: auto;
-}
-
-.pos-page-header {
-    background: linear-gradient(180deg, #ffeb3b 0%, #fdd835 100%);
-    height: 90px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-    border-bottom: 4px solid #000;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-}
-
-.pos-header-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.btn-back-home {
-    padding: 12px 25px;
-    background: #fff;
-    color: #000;
-    border: 3px solid #000;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 3px 0px #000;
-}
-
-.btn-back-home:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 0px #000;
-}
-
-.btn-back-home:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 0px #000;
-}
-
-.pos-page-header h1 {
-    color: #000;
-    font-size: 28px;
-    font-weight: 900;
-}
-
-.pos-header-right {
-    display: flex;
-    gap: 20px;
-}
-
-.pos-main-container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    height: calc(100vh - 90px);
-}
-
-.pos-left-panel,
-.pos-right-panel {
-    background: #1a2555;
-    border-radius: 15px;
-    padding: 25px;
-    border: 2px solid #2a3f7f;
-}
-
-.pos-left-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.pos-right-panel {
-    flex: 1.5;
-    display: flex;
-    flex-direction: column;
-}
-
-.table-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 20px;
 }
 
 /* ==========================================
@@ -1423,12 +1555,6 @@ body {
     gap: 10px;
 }
 
-.total-label {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-}
-
 .total-valores {
     display: flex;
     gap: 20px;
@@ -1499,586 +1625,289 @@ body {
 }
 
 /* ==========================================
-   MODAL DE PAGOS MIXTOS
+   MODAL DE PAGOS MIXTOS (COMPACTO)
    ========================================== */
+
+/* ==========================================
+   MODAL DE PAGOS MIXTOS (GRANDE Y SIN SCROLL)
+   ========================================== */
+
 .modal-pagos-mixtos {
-    background: #1a2555;
-    border-radius: 15px;
-    border: 3px solid #3f51b5;
-    width: 1000px;
-    max-width: 95%;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    animation: slideIn 0.3s;
+    width: 1100px; /* Volvemos al ancho grande */
+    max-height: 95vh; /* Evita que toque los bordes de la pantalla */
+    background: #111827;
+    border: 3px solid #374151;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Prohibido el scroll en el contenedor principal */
 }
 
-.modal-pagos-header {
-    background: #1e3a8a;
-    padding: 20px 30px;
-    border-bottom: 3px solid #3b82f6;
+.modal-pagos-header-compacto {
+    padding: 15px 25px;
+    background: #1f2937;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #374151;
 }
 
-.modal-pagos-header h2 {
-    color: #fff;
-    font-size: 24px;
-    font-weight: 900;
-}
+.modal-pagos-header-compacto h2 { font-size: 20px; margin: 0; color: #fff; }
 
-.btn-close-modal {
-    background: #f44336;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-close-modal:hover {
-    background: #d32f2f;
-    transform: rotate(90deg);
-}
-
-.modal-pagos-body {
+.modal-pagos-body-compacto {
     display: flex;
-    gap: 20px;
     padding: 20px;
-    flex: 1;
-    overflow: hidden;
+    gap: 20px;
+    align-items: flex-start; /* Alinea los paneles arriba */
 }
 
-.pagos-panel-izquierdo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #3a4585;
-    padding-right: 20px;
+/* --- PANEL IZQUIERDO --- */
+.pagos-panel-izquierdo-compacto { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
 }
 
-.pagos-agregados-section-izq {
-    flex: 1;
-    margin-top: 15px;
-    background: #111827;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-.metodos-grid-botones {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.btn-metodo-short {
-    background: #252f5f;
-    border: 1px solid #3f51b5;
-    padding: 10px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    font-size: 11px;
+.total-venta-box-small {
+    background: #1f2937;
+    padding: 15px;
+    border-radius: 10px;
     text-align: center;
-    transition: all 0.2s;
+    border: 1px solid #4b5563;
 }
 
-.btn-metodo-short span {
-    display: block;
-    color: #ffeb3b;
-    font-weight: bold;
-    font-size: 10px;
+.montos-principales .usd-big { 
+    display: block; 
+    font-size: 50px; /* Grande y claro */
+    font-weight: 900; 
+    color: #10b981; 
+}
+.montos-principales .bs-medium { 
+    font-size: 24px; 
+    color: #6ee7b7; 
 }
 
-.btn-metodo-short:hover {
-    background: #3f51b5;
+/* Ajuste de la tabla para que no empuje el contenido hacia abajo */
+.tabla-scroll-mini {
+    height: 220px; /* Altura fija optimizada */
+    overflow-y: auto;
+    background: #000;
+    border-radius: 8px;
+    border: 1px solid #374151;
 }
 
-.select-metodo-grande {
+.tabla-pagos-compacta { width: 100%; font-size: 14px; }
+.tabla-pagos-compacta td { padding: 10px; border-bottom: 1px solid #1f2937; }
+
+/* --- PANEL DERECHO (Registro y Progreso) --- */
+.pagos-panel-derecho-compacto { 
+    flex: 1.2; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; /* Espaciado controlado */
+}
+
+.registro-pago-card { 
+    background: #1f2937; 
+    padding: 15px; 
+    border-radius: 10px; 
+    border: 1px solid #4b5563;
+}
+
+.input-monto-compacto {
     width: 100%;
     padding: 12px;
-    background: #111827;
-    color: #ffeb3b; /* Texto amarillo para resaltar */
-    border: 2px solid #3f51b5;
+    background: #000;
+    color: #10b981;
+    border: 2px solid #374151;
     border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom: 10px;
+    font-size: 38px;
+    font-weight: 900;
+    text-align: center;
+    transition: border-color 0.3s ease;
 }
 
-.select-metodo-grande option {
-    background: #1a2555;
+.input-monto-compacto:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+}
+
+/* Área de Progreso: Aquí quitamos el riesgo de scroll */
+.resumen-pago-card {
+    background: #111827;
+    padding: 15px;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progreso-mini { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+.barra-fondo-mini { 
+    flex: 1; 
+    height: 12px; 
+    background: #374151; 
+    border-radius: 6px; 
+    overflow: hidden; 
+}
+.barra-relleno-mini { height: 100%; background: #10b981; width: 0%; transition: 0.3s; }
+
+.linea-estado { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 15px; 
+}
+
+/* Área de Cambio */
+.cambio-box-mini {
+    background: #1f2937;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #3b82f6;
+}
+
+.inputs-cambio-row { display: flex; gap: 8px; margin-top: 5px; }
+.inputs-cambio-row input { 
+    flex: 1; 
+    padding: 10px; 
+    background: #000; 
+    border: 2px solid #3b82f6; 
+    color: #3b82f6; 
+    border-radius: 6px; 
+    font-size: 16px; 
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Botón Finalizar siempre al fondo del panel derecho */
+.btn-finalizar-venta-pago-mini {
+    width: 100%;
+    padding: 18px;
+    background: #10b981;
     color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: auto; /* Empuja el botón al final del contenedor derecho */
+}
+
+.btn-finalizar-venta-pago-mini:disabled { 
+    background: #374151; 
+    opacity: 0.5; 
+}
+
+/* Estilo embellecido para el selector de método de pago */
+.select-compacto {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #0f172a; /* Azul muy oscuro */
+    color: #fde047; /* Texto amarillo para resaltar los atajos F4-F9 */
+    border: 2px solid #3b82f6; /* Borde azul brillante */
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none; /* Quita la flecha por defecto */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.select-compacto:focus {
+    outline: none;
+    border-color: #fde047; /* Cambia a amarillo al seleccionar */
+    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.2);
+    transform: translateY(-1px);
+}
+
+.select-compacto option {
+    background-color: #1f2937;
+    color: #fff;
     padding: 10px;
 }
 
-.input-monto-pago-grande {
+/* Estilo embellecido para el botón de agregar pago */
+.btn-agregar-compacto {
     width: 100%;
-    background: #000;
-    color: #4caf50;
-    border: 2px solid #3f51b5;
-    border-radius: 8px;
-    padding: 15px;
-    font-size: 32px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.btn-agregar-pago-v2 {
-    width: 100%;
-    padding: 15px;
-    background: #3f51b5; /* Azul institucional */
+    padding: 14px;
+    margin-top: 5px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
-    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    border-bottom: 3px solid #1e40af;
+}
+
+.btn-agregar-compacto:hover {
+    background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-agregar-compacto:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
+    border-bottom: 1px solid #1e40af;
+}
+
+/* Un pequeño detalle para el texto "Enter" dentro del botón */
+.btn-agregar-compacto::after {
+    content: "↵";
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+/* Estilo para que la fila del carrito parezca interactiva */
+.fila-carrito-clicable {
+    cursor: pointer;
     transition: background 0.2s;
 }
 
-.btn-agregar-pago-v2:hover {
-    background: #2a3565;
+.fila-carrito-clicable:hover {
+    background: #2a3f7f !important;
 }
 
-.form-pago-columna {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+/* Estilo para la cantidad fija */
+.col-cantidad-fija {
+    text-align: center;
 }
 
-.opciones-cambio {
-    background: #111827;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
-.form-cambio-grid input {
-    width: 48%;
-    padding: 8px;
-    background: #000;
-    border: 1px solid #3a4585;
-    color: #2196F3;
-    border-radius: 4px;
+.badge-cantidad {
+    background: #3b82f6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 14px;
     display: inline-block;
 }
 
-.input-monto-pago-grande {
-    width: 100%;
-    font-size: 28px; /* Monto bien grande */
-    padding: 15px;
-    text-align: center;
-    background: #000;
-    color: #4caf50;
-    border: 2px solid #3f51b5;
-    border-radius: 8px;
+/* Evitar que el clic en el botón de eliminar abra el modal */
+.btn-eliminar-item {
+    position: relative;
+    z-index: 10;
 }
-
-.hint-enter {
-    font-size: 11px;
-    color: #888;
-    text-align: center;
-    margin-top: 8px;
-}
-
-.tabla-scroll {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.total-venta-box {
-    background: #2a3565;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #3a4585;
-}
-
-.total-venta-box h3 {
-    color: #ffeb3b;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.total-monto {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.total-usd-pago {
-    color: #4caf50;
-    font-size: 32px;
-    font-weight: 900;
-}
-
-.total-bs-pago {
-    color: #66bb6a;
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.resumen-productos-pago {
-    background: #252f5f;
-    padding: 15px;
-    border-radius: 10px;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.resumen-productos-pago h4 {
-    color: #aaa;
-    font-size: 13px;
-    margin-bottom: 12px;
-}
-
-.lista-productos-pago {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.producto-pago-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 12px;
-    background: #1a2555;
-    border-radius: 6px;
-}
-
-.producto-nombre {
-    color: #fff;
-    font-size: 13px;
-}
-
-.producto-precio {
-    color: #4caf50;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.pagos-panel-derecho {
-    flex: 1.5;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-.agregar-pago-section {
-    background: #2a3565;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #3a4585;
-}
-
-.agregar-pago-section h3 {
-    color: #ffeb3b;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.form-pago-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.form-pago-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-pago-item label {
-    color: #aaa;
-    font-size: 12px;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.select-metodo,
-.input-monto-pago {
-    padding: 10px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 14px;
-}
-
-.select-metodo:focus,
-.input-monto-pago:focus {
-    outline: none;
-    border-color: #3f51b5;
-}
-
-.btn-agregar-pago {
-    width: 100%;
-    padding: 12px;
-    background: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-agregar-pago:hover {
-    background: #66bb6a;
-    transform: translateY(-2px);
-}
-
-.pagos-agregados-section {
-    background: #252f5f;
-    padding: 20px;
-    border-radius: 10px;
-    max-height: 220px;
-    overflow-y: auto;
-}
-
-.pagos-agregados-section h3 {
-    color: #aaa;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.tabla-pagos-agregados {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.tabla-pagos-agregados th {
-    text-align: left;
-    color: #ffeb3b;
-    font-size: 12px;
-    padding: 8px;
-    border-bottom: 2px solid #3a4585;
-}
-
-.tabla-pagos-agregados td {
-    padding: 8px;
-    color: #fff;
-    font-size: 13px;
-    border-bottom: 1px solid #2a3f7f;
-}
-
-.sin-pagos {
-    text-align: center;
-    color: #888;
-    font-style: italic;
-}
-
-.btn-eliminar-pago {
-    background: #f44336;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 8px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.btn-eliminar-pago:hover {
-    background: #d32f2f;
-}
-
-.estado-pago-section {
-    background: #2a3565;
-    padding: 15px; /* Reducido de 20px a 15px */
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Reducido de 12px a 8px */
-}
-
-/* Barra de Progreso de Pago */
-.progreso-pago-container {
-    background: #1a2555;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
-
-.progreso-pago-label {
-    color: #aaa;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.progreso-barra-fondo {
-    background: #0f1535;
-    border-radius: 10px;
-    height: 20px;
-    overflow: hidden;
-    border: 2px solid #2a3f7f;
-}
-
-.progreso-barra-relleno {
-    background: linear-gradient(90deg, #4caf50, #66bb6a);
-    height: 100%;
-    width: 0%;
-    transition: width 0.4s ease, background 0.3s;
-    border-radius: 8px;
-}
-
-.progreso-barra-relleno.parcial {
-    background: linear-gradient(90deg, #ff9800, #ffb74d);
-}
-
-.progreso-barra-relleno.completo {
-    background: linear-gradient(90deg, #4caf50, #81c784);
-}
-
-.progreso-porcentaje {
-    color: #4caf50;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: right;
-    margin-top: 8px;
-    transition: color 0.3s;
-}
-
-/* Reducimos el padding y el tamaño de los items de estado */
-.estado-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px; /* Reducido para que ocupe menos alto */
-    background: #1a2555;
-    border-radius: 6px;
-}
-
-.estado-label {
-    color: #aaa;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.estado-valor {
-    font-size: 15px; /* Reducido de 18px a 15px */
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-.estado-valor.positivo {
-    color: #4caf50;
-}
-
-.estado-valor.faltante {
-    color: #ff9800;
-}
-
-.estado-valor.cambio {
-    color: #2196F3;
-}
-
-.opciones-cambio {
-    background: #252f5f;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.opciones-cambio h4 {
-    color: #ffeb3b;
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.form-cambio-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.form-cambio-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-cambio-item label {
-    color: #aaa;
-    font-size: 12px;
-    margin-bottom: 6px;
-}
-
-.input-cambio {
-    padding: 10px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 14px;
-    text-align: center;
-}
-
-.input-cambio:focus {
-    outline: none;
-    border-color: #3f51b5;
-}
-
-.input-cambio:read-only {
-    background: #1a2040;
-    color: #888;
-}
-
-.botones-finales-pago {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.btn-finalizar-venta-pago,
-.btn-cancelar-venta-pago {
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-finalizar-venta-pago {
-    background: #4caf50;
-    color: #fff;
-}
-
-.btn-finalizar-venta-pago:hover:not(:disabled) {
-    background: #66bb6a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
-}
-
-.btn-finalizar-venta-pago:disabled {
-    background: #555;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
-.btn-cancelar-venta-pago {
-    background: #757575;
-    color: #fff;
-}
-
-.btn-cancelar-venta-pago:hover {
-    background: #9e9e9e;
-    transform: translateY(-2px);
-}
-
-
-
