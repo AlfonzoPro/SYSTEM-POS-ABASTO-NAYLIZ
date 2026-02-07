@@ -6,6 +6,11 @@ let inventario = [];
 let carrito = [];
 let ventasDelDia = [];
 let productoEnEdicion = null; // Para el modal de modificación
+let indiceSeleccionado = -1; // Para navegación con teclado
+let productosPOS = [];
+let productoEnCantidad = null; // Para el modal de cantidad
+let pagosAgregados = []; // Para el sistema de pagos mixtos
+let totalVentaActual = 0; // Total de la venta actual en USD
 
 // ==========================================
 // INICIALIZACIÓN
@@ -31,8 +36,6 @@ async function cargarConfiguracion() {
         const res = await fetch('/api/config');
         const config = await res.json();
         tasaDolar = config.precioDolar || 36.50;
-        const inputTasa = document.getElementById('tasa-input');
-        if (inputTasa) inputTasa.value = tasaDolar;
         
         // Actualizar display en sidebar
         const displayTasa = document.getElementById('tasaDolarDisplay');
@@ -68,18 +71,58 @@ async function cargarVentasDelDia() {
 
 function actualizarResumenDelDia() {
     let totalEfectivoDolares = 0;
+    let totalBiopago = 0;
+    let totalPuntoVenta = 0;
+    let totalPagoMovil = 0;
+    let totalNotaCredito = 0;
     
     ventasDelDia.forEach(venta => {
-        totalEfectivoDolares += venta.totalDolares || 0;
+        if (venta.mediosPago && Array.isArray(venta.mediosPago)) {
+            // Nueva estructura con medios de pago desglosados
+            venta.mediosPago.forEach(pago => {
+                switch(pago.metodo) {
+                    case 'EFECTIVO_USD':
+                    case 'EFECTIVO_BS':
+                        totalEfectivoDolares += pago.montoUSD;
+                        break;
+                    case 'BIOPAGO':
+                        totalBiopago += pago.montoUSD;
+                        break;
+                    case 'PUNTO_VENTA':
+                        totalPuntoVenta += pago.montoUSD;
+                        break;
+                    case 'PAGO_MOVIL':
+                    case 'TRANSFERENCIA':
+                        totalPagoMovil += pago.montoUSD;
+                        break;
+                    case 'NOTA_CREDITO':
+                        totalNotaCredito += pago.montoUSD;
+                        break;
+                }
+            });
+        } else {
+            // Estructura antigua (compatibilidad)
+            totalEfectivoDolares += venta.totalDolares || 0;
+        }
     });
     
     const efectivoDolares = document.getElementById('efectivoDolares');
     const efectivoBolivares = document.getElementById('efectivoBolivares');
+    const biopago = document.getElementById('biopago');
+    const puntoVenta = document.getElementById('puntoVenta');
+    const pagoMovil = document.getElementById('pagoMovil');
+    const notaCredito = document.getElementById('notaCredito');
     const totalPagos = document.getElementById('totalPagos');
+    
+    const totalGeneral = totalEfectivoDolares + totalBiopago + totalPuntoVenta + totalPagoMovil + totalNotaCredito;
     
     if (efectivoDolares) efectivoDolares.textContent = `$${totalEfectivoDolares.toFixed(2)}`;
     if (efectivoBolivares) efectivoBolivares.textContent = `Bs ${(totalEfectivoDolares * tasaDolar).toFixed(2)}`;
-    if (totalPagos) totalPagos.textContent = `Bs ${(totalEfectivoDolares * tasaDolar).toFixed(2)}`;
+    if (biopago) biopago.textContent = `$${totalBiopago.toFixed(2)}`;
+    if (puntoVenta) puntoVenta.textContent = `$${totalPuntoVenta.toFixed(2)}`;
+    if (pagoMovil) pagoMovil.textContent = `$${totalPagoMovil.toFixed(2)}`;
+    if (notaCredito) notaCredito.textContent = `$${totalNotaCredito.toFixed(2)}`;
+    if (totalPagos) totalPagos.textContent = `$${totalGeneral.toFixed(2)}`;
 }
 
 // ==========================================
@@ -133,9 +176,14 @@ async function cargarInventario() {
     inventario = await res.json();
 }
 
-function renderizarTablaInventario() {
+function renderizarTablaInventario(mostrarTodos = false) {
     const tbody = document.querySelector('#listaProductos');
     if (!tbody) return;
+
+    if (!mostrarTodos) {
+        tbody.innerHTML = '<tr><td colspan="7" class="sin-productos">Usa el buscador para encontrar productos</td></tr>';
+        return;
+    }
 
     if (inventario.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="sin-productos">No hay productos registrados</td></tr>';
@@ -167,10 +215,19 @@ function filtrarInventario(valor) {
     const tbody = document.querySelector('#listaProductos');
     if (!tbody) return;
     
-    const filtrado = inventario.filter(p => 
-        p.nombre.toLowerCase().includes(valor.toLowerCase()) ||
-        p.codigo.toString().includes(valor)
-    );
+    if (!valor) {
+        // Si no hay búsqueda, mostrar mensaje
+        tbody.innerHTML = '<tr><td colspan="7" class="sin-productos">Usa el buscador para encontrar productos</td></tr>';
+        return;
+    }
+    
+    const valorUpper = valor.toUpperCase();
+    const filtrado = inventario
+        .filter(p => 
+            p.nombre.toUpperCase().startsWith(valorUpper) ||
+            p.codigo.toString().startsWith(valor)
+        )
+        .sort((a, b) => a.nombre.localeCompare(b.nombre));
     
     if (filtrado.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="sin-productos">No se encontraron productos</td></tr>';
@@ -227,7 +284,12 @@ async function guardarEnInventario(e) {
     });
 
     e.target.reset();
-    renderizarTablaInventario();
+    
+    // Limpiar búsqueda y mantener tabla vacía
+    const buscarInput = document.getElementById('buscarProducto');
+    if (buscarInput) buscarInput.value = '';
+    
+    renderizarTablaInventario(false); // false = no mostrar todos
     alert('Producto agregado correctamente');
 }
 
@@ -347,15 +409,22 @@ function buscarEnPOS(valor) {
     const divResultados = document.getElementById('resultados-busqueda');
     if (!divResultados) return;
     
+    indiceSeleccionado = -1; // Resetear índice
+    
     if (!valor) { 
         divResultados.innerHTML = '<div class="no-products">Busca un producto para agregar a la venta</div>'; 
         return; 
     }
 
-    const filtrados = inventario.filter(p => 
-        p.nombre.toLowerCase().includes(valor.toLowerCase()) ||
-        p.codigo.toString().includes(valor)
-    ).slice(0, 10);
+    // Filtrar productos que empiecen con el texto buscado (orden alfabético)
+    const valorUpper = valor.toUpperCase();
+    const filtrados = inventario
+        .filter(p => 
+            p.nombre.toUpperCase().startsWith(valorUpper) ||
+            p.codigo.toString().startsWith(valor)
+        )
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
+        .slice(0, 10);
 
     if (filtrados.length === 0) {
         divResultados.innerHTML = '<div class="no-products">No se encontraron productos</div>';
@@ -363,7 +432,7 @@ function buscarEnPOS(valor) {
     }
 
     divResultados.innerHTML = filtrados.map(p => `
-        <div class="resultado-item" onclick="agregarAlCarrito(${p.codigo})">
+        <div class="resultado-item" onclick="abrirModalCantidad(${p.codigo})">
             <div class="resultado-info">
                 <span class="resultado-nombre">${p.nombre}</span>
                 <span class="resultado-codigo">Cód: ${p.codigo}</span>
@@ -536,3 +605,474 @@ function editarTasaDolar() {
 function abrirBuscadorFechas() {
     alert("Funcionalidad de búsqueda por fechas en desarrollo");
 }
+
+// ==========================================
+// MODAL DE TASA DEL DÓLAR
+// ==========================================
+function abrirModalTasa() {
+    const modal = document.getElementById('modalEditarTasa');
+    const tasaActual = document.getElementById('tasaActualModal');
+    const inputTasa = document.getElementById('inputNuevaTasa');
+    
+    if (tasaActual) tasaActual.textContent = `Bs ${tasaDolar.toFixed(2)}`;
+    if (inputTasa) {
+        inputTasa.value = tasaDolar.toFixed(2);
+        modal.style.display = 'flex';
+        setTimeout(() => inputTasa.focus(), 100);
+        
+        // Permitir confirmar con Enter
+        inputTasa.onkeydown = (e) => {
+            if (e.key === 'Enter') guardarNuevaTasa();
+            if (e.key === 'Escape') cerrarModalTasa();
+        };
+    }
+}
+
+function cerrarModalTasa() {
+    const modal = document.getElementById('modalEditarTasa');
+    if (modal) modal.style.display = 'none';
+}
+
+async function guardarNuevaTasa() {
+    const inputTasa = document.getElementById('inputNuevaTasa');
+    const nuevaTasa = parseFloat(inputTasa.value);
+    
+    if (isNaN(nuevaTasa) || nuevaTasa <= 0) {
+        alert('Por favor ingrese una tasa válida');
+        return;
+    }
+    
+    tasaDolar = nuevaTasa;
+    
+    // Guardar en el servidor
+    await fetch('/api/config', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ precioDolar: tasaDolar })
+    });
+    
+    // Actualizar todos los displays
+    const displayTasa = document.getElementById('tasaDolarDisplay');
+    if (displayTasa) displayTasa.textContent = tasaDolar.toFixed(2);
+    
+    const tasaPOS = document.getElementById('tasaDolarPOS');
+    if (tasaPOS) tasaPOS.textContent = `Bs ${tasaDolar.toFixed(2)}`;
+    
+    // Actualizar totales y tablas
+    actualizarInterfazCarrito();
+    if (document.getElementById('listaProductos')) {
+        renderizarTablaInventario();
+    }
+    
+    cerrarModalTasa();
+}
+
+// ==========================================
+// NAVEGACIÓN CON TECLADO EN BÚSQUEDA POS
+// ==========================================
+function manejarTeclasBusqueda(event) {
+    const resultados = document.querySelectorAll('.resultado-item');
+    
+    if (resultados.length === 0) return;
+    
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        indiceSeleccionado++;
+        if (indiceSeleccionado >= resultados.length) indiceSeleccionado = 0;
+        actualizarSeleccion(resultados);
+    } 
+    else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        indiceSeleccionado--;
+        if (indiceSeleccionado < 0) indiceSeleccionado = resultados.length - 1;
+        actualizarSeleccion(resultados);
+    }
+    else if (event.key === 'Enter') {
+        event.preventDefault();
+        if (indiceSeleccionado >= 0 && indiceSeleccionado < resultados.length) {
+            resultados[indiceSeleccionado].click();
+        }
+    }
+}
+
+function actualizarSeleccion(resultados) {
+    resultados.forEach((item, index) => {
+        if (index === indiceSeleccionado) {
+            item.classList.add('seleccionado');
+            item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        } else {
+            item.classList.remove('seleccionado');
+        }
+    });
+}
+
+// ==========================================
+// MODAL DE CANTIDAD DE PRODUCTO
+// ==========================================
+function abrirModalCantidad(codigo) {
+    const producto = inventario.find(p => p.codigo === codigo);
+    if (!producto) return;
+    
+    productoEnCantidad = producto;
+    
+    // Llenar datos del modal
+    document.getElementById('nombreProductoCantidad').textContent = producto.nombre;
+    document.getElementById('codigoProductoCantidad').textContent = `Cód: ${producto.codigo}`;
+    document.getElementById('precioDolarCantidad').textContent = `$${producto.precioVenta.toFixed(2)}`;
+    document.getElementById('precioBsCantidad').textContent = `Bs ${(producto.precioVenta * tasaDolar).toFixed(2)}`;
+    
+    // Resetear cantidad a 1
+    const inputCantidad = document.getElementById('inputCantidadProducto');
+    inputCantidad.value = '1';
+    
+    // Calcular total inicial
+    actualizarTotalCantidad();
+    
+    // Mostrar modal
+    document.getElementById('modalCantidadProducto').style.display = 'flex';
+    
+    // Focus en el input y seleccionar todo
+    setTimeout(() => {
+        inputCantidad.focus();
+        inputCantidad.select();
+    }, 100);
+    
+    // Eventos del input
+    inputCantidad.oninput = actualizarTotalCantidad;
+    inputCantidad.onkeydown = (e) => {
+        if (e.key === 'Enter') confirmarCantidadProducto();
+        if (e.key === 'Escape') cancelarCantidadProducto();
+    };
+}
+
+function actualizarTotalCantidad() {
+    const cantidad = parseFloat(document.getElementById('inputCantidadProducto').value) || 0;
+    
+    if (productoEnCantidad) {
+        const totalDolar = productoEnCantidad.precioVenta * cantidad;
+        const totalBs = totalDolar * tasaDolar;
+        
+        document.getElementById('totalDolarCantidad').textContent = `$${totalDolar.toFixed(2)}`;
+        document.getElementById('totalBsCantidad').textContent = `Bs ${totalBs.toFixed(2)}`;
+    }
+}
+
+function confirmarCantidadProducto() {
+    const cantidad = parseFloat(document.getElementById('inputCantidadProducto').value);
+    
+    if (!cantidad || cantidad <= 0) {
+        alert('Por favor ingrese una cantidad válida');
+        return;
+    }
+    
+    if (!productoEnCantidad) return;
+    
+    // Buscar si ya existe en el carrito
+    const itemEnCarrito = carrito.find(c => c.codigo === productoEnCantidad.codigo);
+    
+    if (itemEnCarrito) {
+        itemEnCarrito.cantidad += cantidad;
+    } else {
+        carrito.push({ ...productoEnCantidad, cantidad: cantidad });
+    }
+    
+    actualizarInterfazCarrito();
+    cancelarCantidadProducto();
+    
+    // Limpiar búsqueda
+    const buscarInput = document.getElementById('buscarProductoPOS');
+    if (buscarInput) {
+        buscarInput.value = '';
+        buscarInput.focus();
+    }
+    const resultados = document.getElementById('resultados-busqueda');
+    if (resultados) resultados.innerHTML = '<div class="no-products">Busca un producto para agregar a la venta</div>';
+    
+    indiceSeleccionado = -1;
+}
+
+function cancelarCantidadProducto() {
+    document.getElementById('modalCantidadProducto').style.display = 'none';
+    productoEnCantidad = null;
+    
+    // Volver focus al buscador
+    const buscarInput = document.getElementById('buscarProductoPOS');
+    if (buscarInput) buscarInput.focus();
+}
+
+// ==========================================
+// SISTEMA DE PAGOS MIXTOS
+// ==========================================
+function abrirModalPagos() {
+    if (carrito.length === 0) {
+        alert("El carrito está vacío");
+        return;
+    }
+    
+    // Calcular total de la venta
+    totalVentaActual = carrito.reduce((sum, item) => sum + (item.precioVenta * item.cantidad), 0);
+    
+    // Resetear pagos
+    pagosAgregados = [];
+    
+    // Llenar información del modal
+    document.getElementById('totalVentaUSD').textContent = `$${totalVentaActual.toFixed(2)}`;
+    document.getElementById('totalVentaBS').textContent = `Bs ${(totalVentaActual * tasaDolar).toFixed(2)}`;
+    
+    // Llenar lista de productos
+    const listaProductos = document.getElementById('listaProductosPago');
+    listaProductos.innerHTML = carrito.map(item => `
+        <div class="producto-pago-item">
+            <span class="producto-nombre">${item.cantidad}x ${item.nombre}</span>
+            <span class="producto-precio">$${(item.precioVenta * item.cantidad).toFixed(2)}</span>
+        </div>
+    `).join('');
+    
+    // Resetear formulario
+    document.getElementById('metodoPago').selectedIndex = 0;
+    document.getElementById('montoPago').value = '';
+    
+    // Actualizar estado
+    actualizarEstadoPagos();
+    
+    // Mostrar modal
+    document.getElementById('modalPagosMixtos').style.display = 'flex';
+}
+
+function cerrarModalPagos() {
+    document.getElementById('modalPagosMixtos').style.display = 'none';
+    pagosAgregados = [];
+}
+
+function agregarMetodoPago() {
+    const metodo = document.getElementById('metodoPago').value;
+    const monto = parseFloat(document.getElementById('montoPago').value);
+    
+    if (!monto || monto <= 0) {
+        alert('Por favor ingrese un monto válido');
+        return;
+    }
+    
+    // Convertir a USD si es en Bs
+    let montoUSD = monto;
+    let montoBs = 0;
+    let moneda = 'USD';
+    
+    if (metodo === 'EFECTIVO_BS') {
+        montoUSD = monto / tasaDolar;
+        montoBs = monto;
+        moneda = 'Bs';
+    } else {
+        montoBs = monto * tasaDolar;
+    }
+    
+    // Agregar pago
+    pagosAgregados.push({
+        metodo: metodo,
+        monto: monto,
+        montoUSD: montoUSD,
+        montoBs: montoBs,
+        moneda: moneda
+    });
+    
+    // Actualizar tabla
+    renderizarPagosAgregados();
+    
+    // Actualizar estado
+    actualizarEstadoPagos();
+    
+    // Limpiar formulario
+    document.getElementById('montoPago').value = '';
+}
+
+function renderizarPagosAgregados() {
+    const tbody = document.getElementById('listaPagosAgregados');
+    
+    if (pagosAgregados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="sin-pagos">No hay pagos registrados</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = pagosAgregados.map((pago, index) => {
+        const nombreMetodo = getNombreMetodo(pago.metodo);
+        const montoDisplay = pago.moneda === 'Bs' ? 
+            `Bs ${pago.monto.toFixed(2)}` : 
+            `$${pago.monto.toFixed(2)}`;
+        
+        return `
+            <tr>
+                <td>${nombreMetodo}</td>
+                <td>${montoDisplay}</td>
+                <td>
+                    <button class="btn-eliminar-pago" onclick="eliminarPago(${index})">
+                        ❌
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function getNombreMetodo(metodo) {
+    const nombres = {
+        'EFECTIVO_USD': '💵 Efectivo USD',
+        'EFECTIVO_BS': '💵 Efectivo Bs',
+        'BIOPAGO': '💳 Biopago',
+        'PUNTO_VENTA': '💳 Punto de Venta',
+        'PAGO_MOVIL': '📱 Pago Móvil',
+        'TRANSFERENCIA': '🏦 Transferencia',
+        'NOTA_CREDITO': '📄 Nota Crédito'
+    };
+    return nombres[metodo] || metodo;
+}
+
+function eliminarPago(index) {
+    pagosAgregados.splice(index, 1);
+    renderizarPagosAgregados();
+    actualizarEstadoPagos();
+}
+
+function actualizarEstadoPagos() {
+    // Calcular total pagado en USD
+    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
+    const totalPagadoBS = totalPagadoUSD * tasaDolar;
+    const faltante = totalVentaActual - totalPagadoUSD;
+    const faltanteBS = Math.abs(faltante) * tasaDolar;
+    const cambio = totalPagadoUSD - totalVentaActual;
+    
+    // Actualizar displays en USD
+    document.getElementById('totalPagado').textContent = `${totalPagadoUSD.toFixed(2)}`;
+    document.getElementById('faltantePago').textContent = `${Math.abs(faltante).toFixed(2)}`;
+    
+    // Actualizar displays en Bs
+    const totalPagadoBSElement = document.getElementById('totalPagadoBS');
+    const faltanteBSElement = document.getElementById('faltantePagoBS');
+    if (totalPagadoBSElement) {
+        totalPagadoBSElement.textContent = `Bs ${totalPagadoBS.toFixed(2)}`;
+    }
+    if (faltanteBSElement) {
+        faltanteBSElement.textContent = `Bs ${faltanteBS.toFixed(2)}`;
+    }
+    
+    // Actualizar barra de progreso
+    const barraProgreso = document.getElementById('barraProgresoPago');
+    const porcentajePago = document.getElementById('porcentajePago');
+    
+    if (barraProgreso && porcentajePago) {
+        let porcentaje = 0;
+        if (totalVentaActual > 0) {
+            porcentaje = Math.min((totalPagadoUSD / totalVentaActual) * 100, 100);
+        }
+        
+        barraProgreso.style.width = `${porcentaje}%`;
+        porcentajePago.textContent = `${porcentaje.toFixed(1)}%`;
+        
+        // Cambiar color según el progreso
+        barraProgreso.classList.remove('parcial', 'completo');
+        if (porcentaje >= 100) {
+            barraProgreso.classList.add('completo');
+            porcentajePago.style.color = '#4caf50';
+        } else if (porcentaje > 0) {
+            barraProgreso.classList.add('parcial');
+            porcentajePago.style.color = '#ff9800';
+        } else {
+            porcentajePago.style.color = '#888';
+        }
+    }
+    
+    // Mostrar/ocultar secciones según el estado
+    const cambioSection = document.getElementById('cambioSection');
+    const opcionesCambio = document.getElementById('opcionesCambio');
+    const btnFinalizar = document.getElementById('btnFinalizarPago');
+    
+    if (cambio > 0.01) {
+        // Hay cambio
+        cambioSection.style.display = 'flex';
+        opcionesCambio.style.display = 'block';
+        document.getElementById('cambioPago').textContent = `${cambio.toFixed(2)}`;
+        
+        // Habilitar botón si se ha especificado cómo dar el cambio
+        const cambioUSD = parseFloat(document.getElementById('cambioUSD').value) || 0;
+        const cambioBs = parseFloat(document.getElementById('cambioBS').value) || 0;
+        const totalCambioEspecificado = cambioUSD + (cambioBs / tasaDolar);
+        
+        btnFinalizar.disabled = Math.abs(totalCambioEspecificado - cambio) > 0.01;
+    } else {
+        // No hay cambio
+        cambioSection.style.display = 'none';
+        opcionesCambio.style.display = 'none';
+        
+        // Habilitar botón si está completamente pagado
+        btnFinalizar.disabled = faltante > 0.01;
+    }
+}
+
+function calcularCambioBs() {
+    const cambioUSD = parseFloat(document.getElementById('cambioUSD').value) || 0;
+    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
+    const cambioTotal = totalPagadoUSD - totalVentaActual;
+    const cambioBs = (cambioTotal - cambioUSD) * tasaDolar;
+    
+    document.getElementById('cambioBS').value = cambioBs > 0 ? cambioBs.toFixed(2) : '0.00';
+    actualizarEstadoPagos();
+}
+
+async function finalizarVentaConPagos() {
+    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
+    const cambio = totalPagadoUSD - totalVentaActual;
+    
+    // Preparar información de cambio
+    let infoCambio = null;
+    if (cambio > 0.01) {
+        const cambioUSD = parseFloat(document.getElementById('cambioUSD').value) || 0;
+        const cambioBs = parseFloat(document.getElementById('cambioBS').value) || 0;
+        
+        infoCambio = {
+            cambioUSD: cambioUSD,
+            cambioBs: cambioBs,
+            cambioTotal: cambio
+        };
+    }
+    
+    // Preparar objeto de venta
+    const nuevaVenta = {
+        id: Date.now(),
+        fecha: new Date(),
+        productos: carrito,
+        totalDolares: totalVentaActual,
+        totalBolivares: totalVentaActual * tasaDolar,
+        precioDolarUsado: tasaDolar,
+        mediosPago: pagosAgregados,
+        cambio: infoCambio
+    };
+    
+    // Guardar venta
+    const resVentas = await fetch('/api/ventas');
+    const ventasExistentes = await resVentas.json();
+    ventasExistentes.push(nuevaVenta);
+    
+    await fetch('/api/ventas', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(ventasExistentes)
+    });
+    
+    // Mensaje de confirmación
+    let mensaje = `¡Venta realizada con éxito!\n\nTotal: $${totalVentaActual.toFixed(2)} / Bs ${(totalVentaActual * tasaDolar).toFixed(2)}`;
+    
+    if (infoCambio) {
+        mensaje += `\n\nCambio:`;
+        if (infoCambio.cambioUSD > 0) mensaje += `\nEfectivo USD: $${infoCambio.cambioUSD.toFixed(2)}`;
+        if (infoCambio.cambioBs > 0) mensaje += `\nEfectivo Bs: Bs ${infoCambio.cambioBs.toFixed(2)}`;
+    }
+    
+    alert(mensaje);
+    
+    // Limpiar todo
+    carrito = [];
+    pagosAgregados = [];
+    actualizarInterfazCarrito();
+    cerrarModalPagos();
+}
+
+

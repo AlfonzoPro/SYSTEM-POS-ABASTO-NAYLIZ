@@ -30,7 +30,9 @@
             <div class="search-section">
                 <h3>🔍 Buscador de productos</h3>
                 <input type="text" id="buscarProductoPOS" class="pos-search-input" 
-                       placeholder="Buscar por código o nombre..." oninput="buscarEnPOS(this.value)">
+                       placeholder="Buscar por código o nombre..." 
+                       oninput="buscarEnPOS(this.value)"
+                       onkeydown="manejarTeclasBusqueda(event)">
             </div>
             
             <!-- Resultados de Búsqueda -->
@@ -73,20 +75,212 @@
             <div class="totales-section-pos-simple">
                 <!-- Monto Total a Pagar -->
                 <div class="monto-total-display">
-                    <div class="monto-label">MONTO TOTAL A PAGAR:</div>
-                    <div class="monto-valores">
-                        <span class="monto-dolares" id="total-usd">$0.00</span>
-                        <span class="monto-bolivares" id="total-bs">Bs 0.00</span>
+                    <div class="monto-valores-inline">
+                        <div class="monto-item">
+                            <span class="monto-label-small">TOTAL:</span>
+                            <span class="monto-dolares" id="total-usd">$0.00</span>
+                        </div>
+                        <div class="monto-item">
+                            <span class="monto-label-small">TOTAL Bs:</span>
+                            <span class="monto-bolivares" id="total-bs">Bs 0.00</span>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Botones de Acción -->
                 <div class="action-buttons-pos">
-                    <button class="btn-pos btn-procesar" onclick="procesarVenta()">
-                        💳 Finalizar Venta
+                    <button class="btn-pos btn-procesar" onclick="abrirModalPagos()">
+                        💳 Procesar Pago
                     </button>
                     <button class="btn-pos btn-limpiar" onclick="limpiarCarrito()">
                         🗑️ Limpiar Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pagos Mixtos -->
+    <div id="modalPagosMixtos" class="modal-overlay" style="display: none;">
+        <div class="modal-pagos-mixtos">
+            <div class="modal-pagos-header">
+                <h2>💰 PROCESAR PAGO</h2>
+                <button class="btn-close-modal" onclick="cerrarModalPagos()">✕</button>
+            </div>
+            
+            <div class="modal-pagos-body">
+                <!-- Panel Izquierdo: Resumen de la Venta -->
+                <div class="pagos-panel-izquierdo">
+                    <div class="total-venta-box">
+                        <h3>TOTAL A PAGAR</h3>
+                        <div class="total-monto">
+                            <span class="total-usd-pago" id="totalVentaUSD">$0.00</span>
+                            <span class="total-bs-pago" id="totalVentaBS">Bs 0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista de Productos -->
+                    <div class="resumen-productos-pago">
+                        <h4>Productos:</h4>
+                        <div class="lista-productos-pago" id="listaProductosPago">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel Derecho: Métodos de Pago -->
+                <div class="pagos-panel-derecho">
+                    <!-- Formulario Agregar Pago -->
+                    <div class="agregar-pago-section">
+                        <h3>Agregar Método de Pago</h3>
+                        
+                        <div class="form-pago-grid">
+                            <div class="form-pago-item">
+                                <label>Método:</label>
+                                <select id="metodoPago" class="select-metodo">
+                                    <option value="EFECTIVO_USD">💵 Efectivo USD</option>
+                                    <option value="EFECTIVO_BS">💵 Efectivo Bs</option>
+                                    <option value="BIOPAGO">💳 Biopago</option>
+                                    <option value="PUNTO_VENTA">💳 Punto de Venta</option>
+                                    <option value="PAGO_MOVIL">📱 Pago Móvil</option>
+                                    <option value="NOTA_CREDITO">📄 Nota Crédito</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-pago-item">
+                                <label>Monto:</label>
+                                <input type="number" id="montoPago" class="input-monto-pago" 
+                                       placeholder="0.00" step="0.01" min="0">
+                            </div>
+                        </div>
+                        
+                        <button class="btn-agregar-pago" onclick="agregarMetodoPago()">
+                            + Agregar Pago
+                        </button>
+                    </div>
+                    
+                    <!-- Lista de Pagos Agregados -->
+                    <div class="pagos-agregados-section">
+                        <h3>Pagos Registrados</h3>
+                        <table class="tabla-pagos-agregados">
+                            <thead>
+                                <tr>
+                                    <th>Método</th>
+                                    <th>Monto</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaPagosAgregados">
+                                <tr>
+                                    <td colspan="3" class="sin-pagos">No hay pagos registrados</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Estado del Pago -->
+                    <div class="estado-pago-section">
+                        <!-- Barra de Progreso -->
+                        <div class="progreso-pago-container">
+                            <div class="progreso-pago-label">Progreso de Pago</div>
+                            <div class="progreso-barra-fondo">
+                                <div class="progreso-barra-relleno" id="barraProgresoPago"></div>
+                            </div>
+                            <div class="progreso-porcentaje" id="porcentajePago">0%</div>
+                        </div>
+                        
+                        <div class="estado-item">
+                            <span class="estado-label">Total Pagado:</span>
+                            <span class="estado-valor positivo" id="totalPagado">$0.00</span>
+                        </div>
+                        <div class="estado-item">
+                            <span class="estado-label">Pagado Bs:</span>
+                            <span class="estado-valor positivo" id="totalPagadoBS">Bs 0.00</span>
+                        </div>
+                        <div class="estado-item">
+                            <span class="estado-label">Faltante:</span>
+                            <span class="estado-valor faltante" id="faltantePago">$0.00</span>
+                        </div>
+                        <div class="estado-item">
+                            <span class="estado-label">Faltante Bs:</span>
+                            <span class="estado-valor faltante" id="faltantePagoBS">Bs 0.00</span>
+                        </div>
+                        <div class="estado-item cambio-section" id="cambioSection" style="display: none;">
+                            <span class="estado-label">Cambio:</span>
+                            <span class="estado-valor cambio" id="cambioPago">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de Cambio (si aplica) -->
+                    <div class="opciones-cambio" id="opcionesCambio" style="display: none;">
+                        <h4>Dar Cambio en:</h4>
+                        <div class="form-cambio-grid">
+                            <div class="form-cambio-item">
+                                <label>Efectivo USD:</label>
+                                <input type="number" id="cambioUSD" class="input-cambio" 
+                                       placeholder="0.00" step="0.01" min="0" 
+                                       oninput="calcularCambioBs()">
+                            </div>
+                            <div class="form-cambio-item">
+                                <label>Efectivo Bs:</label>
+                                <input type="number" id="cambioBS" class="input-cambio" 
+                                       placeholder="0.00" step="0.01" min="0" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de Acción -->
+                    <div class="botones-finales-pago">
+                        <button class="btn-finalizar-venta-pago" onclick="finalizarVentaConPagos()" id="btnFinalizarPago" disabled>
+                            ✓ Finalizar Venta
+                        </button>
+                        <button class="btn-cancelar-venta-pago" onclick="cerrarModalPagos()">
+                            ✗ Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal/Tarjeta de Cantidad -->
+    <div id="modalCantidadProducto" class="modal-overlay" style="display: none;">
+        <div class="modal-cantidad-producto">
+            <div class="modal-cantidad-header">
+                <h3 id="nombreProductoCantidad">Producto</h3>
+                <span class="codigo-producto-cantidad" id="codigoProductoCantidad">Cód: 000</span>
+            </div>
+            <div class="modal-cantidad-body">
+                <div class="precio-info-cantidad">
+                    <div class="precio-unitario">
+                        <span class="precio-label">Precio Unitario:</span>
+                        <div class="precios-valores">
+                            <span class="precio-dolar" id="precioDolarCantidad">$0.00</span>
+                            <span class="precio-bs" id="precioBsCantidad">Bs 0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cantidad-input-section">
+                    <label>Cantidad:</label>
+                    <input type="number" id="inputCantidadProducto" class="input-cantidad-producto" 
+                           value="1" step="0.01" min="0.01" autocomplete="off">
+                </div>
+                
+                <div class="total-producto-cantidad">
+                    <span class="total-label">TOTAL A PAGAR:</span>
+                    <div class="total-valores">
+                        <span class="total-dolar" id="totalDolarCantidad">$0.00</span>
+                        <span class="total-bs" id="totalBsCantidad">Bs 0.00</span>
+                    </div>
+                </div>
+                
+                <div class="modal-cantidad-buttons">
+                    <button class="btn-cantidad-confirmar" onclick="confirmarCantidadProducto()">
+                        ✓ Agregar (Enter)
+                    </button>
+                    <button class="btn-cantidad-cancelar" onclick="cancelarCantidadProducto()">
+                        ✗ Cancelar (Esc)
                     </button>
                 </div>
             </div>

@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Archivos compilados
+dist/
+out/
+
+# Archivos de datos (descomenta si quieres versionar los datos)
+data/*.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporal de Electron
+.electron-builder/
+.cache/

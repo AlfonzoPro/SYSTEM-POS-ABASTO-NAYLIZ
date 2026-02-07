@@ -120,11 +120,18 @@ body {
     gap: 5px;
     cursor: pointer;
     transition: all 0.2s;
+    width: 100%;
 }
 
 .rate-display-box:hover {
     background: #1e3470;
     border-color: #3f51b5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(63,81,181,0.3);
+}
+
+.rate-display-box:active {
+    transform: translateY(0);
 }
 
 .rate-label {
@@ -133,15 +140,10 @@ body {
     font-size: 18px;
 }
 
-.rate-value-input {
-    background: transparent;
-    border: none;
+.rate-value {
     color: #fff;
     font-size: 24px;
     font-weight: bold;
-    width: 100px;
-    outline: none;
-    text-align: center;
 }
 
 .rate-hint {
@@ -242,48 +244,59 @@ body {
     border-radius: 15px;
     padding: 30px;
     border: 2px solid #2a3f7f;
+    max-height: calc(100vh - 250px);
+    display: flex;
+    flex-direction: column;
 }
 
 .efectivo-registrado {
     background: #2a3565;
-    padding: 25px;
+    padding: 20px 25px;
     border-radius: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     border: 1px solid #3a4585;
 }
 
 .efectivo-title {
     color: #aaa;
-    font-size: 14px;
-    margin-bottom: 15px;
+    font-size: 13px;
+    margin-bottom: 12px;
 }
 
 .efectivo-amounts {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .amount-line {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: bold;
     color: #4caf50;
+}
+
+.amount-line.amount-bs {
+    font-size: 20px;
+    color: #66bb6a;
 }
 
 /* Payment Methods Section */
 .payment-methods-section {
     background: #252f5f;
-    padding: 25px;
+    padding: 20px 25px;
     border-radius: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .payment-methods-header {
     display: flex;
     justify-content: space-between;
     color: #aaa;
-    font-size: 14px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #3a4585;
 }
 
@@ -294,26 +307,27 @@ body {
 .payment-method-row {
     display: flex;
     justify-content: space-between;
-    padding: 15px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #3a4585;
 }
 
 .method-name {
     font-weight: 600;
     color: #fff;
+    font-size: 12px;
 }
 
 .method-amount {
     font-weight: bold;
     color: #66bb6a;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .payment-total-row {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
-    margin-top: 20px;
+    padding: 18px 20px;
+    margin-top: auto;
     background: #4caf50;
     border-radius: 8px;
 }
@@ -321,13 +335,13 @@ body {
 .total-payments-label {
     font-weight: 900;
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .total-payments-amount {
     font-weight: 900;
     color: #fff;
-    font-size: 24px;
+    font-size: 22px;
 }
 
 /* ==========================================
@@ -778,39 +792,45 @@ body {
 /* Totales y Botones */
 .totales-section-pos-simple {
     background: #252f5f;
-    padding: 20px;
+    padding: 15px 20px;
     border-radius: 10px;
     border: 2px solid #3a4585;
 }
 
 .monto-total-display {
     background: #2a3565;
-    padding: 20px;
+    padding: 15px 20px;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-.monto-label {
-    color: #aaa;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.monto-valores {
+.monto-valores-inline {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.monto-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.monto-label-small {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .monto-dolares {
     color: #4caf50;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
 }
 
 .monto-bolivares {
     color: #66bb6a;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
 }
 
@@ -1166,4 +1186,763 @@ body {
     transform: scale(1.05);
     box-shadow: 0 2px 8px rgba(33,150,243,0.4);
 }
+
+/* ==========================================
+   MODAL DE TASA DEL DÓLAR
+   ========================================== */
+.modal-tasa {
+    background: #1a2555;
+    border-radius: 15px;
+    border: 3px solid #3f51b5;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: slideIn 0.3s;
+}
+
+.modal-tasa-header {
+    background: #1e3a8a;
+    padding: 20px 30px;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 3px solid #3b82f6;
+}
+
+.modal-tasa-header h2 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.modal-tasa-body {
+    padding: 30px;
+}
+
+.tasa-actual-display {
+    background: #252f5f;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tasa-label {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.tasa-valor-actual {
+    color: #4caf50;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.form-group-tasa {
+    margin-bottom: 25px;
+}
+
+.form-group-tasa label {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 600;
+}
+
+.input-nueva-tasa {
+    width: 100%;
+    padding: 15px;
+    background: #0f1535;
+    border: 2px solid #2a3f7f;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.input-nueva-tasa:focus {
+    outline: none;
+    border-color: #3f51b5;
+    background: #1a2040;
+}
+
+.modal-tasa-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.btn-tasa-confirmar,
+.btn-tasa-cancelar {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-tasa-confirmar {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn-tasa-confirmar:hover {
+    background: #66bb6a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+}
+
+.btn-tasa-cancelar {
+    background: #757575;
+    color: #fff;
+}
+
+.btn-tasa-cancelar:hover {
+    background: #9e9e9e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(117,117,117,0.4);
+}
+
+/* ==========================================
+   MODAL DE CANTIDAD DE PRODUCTO
+   ========================================== */
+.modal-cantidad-producto {
+    background: #1a2555;
+    border-radius: 15px;
+    border: 3px solid #3f51b5;
+    width: 550px;
+    max-width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: slideIn 0.3s;
+}
+
+.modal-cantidad-header {
+    background: #1e3a8a;
+    padding: 20px 30px;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 3px solid #3b82f6;
+}
+
+.modal-cantidad-header h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
+
+.codigo-producto-cantidad {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.modal-cantidad-body {
+    padding: 30px;
+}
+
+.precio-info-cantidad {
+    background: #252f5f;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.precio-unitario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.precio-label {
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.precios-valores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.precio-dolar {
+    color: #4caf50;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.precio-bs {
+    color: #66bb6a;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.cantidad-input-section {
+    margin-bottom: 25px;
+}
+
+.cantidad-input-section label {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 600;
+}
+
+.input-cantidad-producto {
+    width: 100%;
+    padding: 15px;
+    background: #0f1535;
+    border: 2px solid #2a3f7f;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.input-cantidad-producto:focus {
+    outline: none;
+    border-color: #3f51b5;
+    background: #1a2040;
+}
+
+.total-producto-cantidad {
+    background: #4caf50;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.total-label {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.total-valores {
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+}
+
+.total-dolar {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.total-bs {
+    color: #e8f5e9;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.modal-cantidad-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.btn-cantidad-confirmar,
+.btn-cantidad-cancelar {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cantidad-confirmar {
+    background: #4caf50;
+    color: #fff;
+    grid-column: 1 / -1;
+}
+
+.btn-cantidad-confirmar:hover {
+    background: #66bb6a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+}
+
+.btn-cantidad-cancelar {
+    background: #757575;
+    color: #fff;
+    grid-column: 1 / -1;
+}
+
+.btn-cantidad-cancelar:hover {
+    background: #9e9e9e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(117,117,117,0.4);
+}
+
+/* ==========================================
+   SELECCIÓN CON TECLADO
+   ========================================== */
+.resultado-item.seleccionado {
+    background: #3a4585 !important;
+    border-color: #5a6fa5 !important;
+    transform: translateX(8px);
+    box-shadow: 0 0 0 2px #3f51b5;
+}
+
+/* ==========================================
+   MODAL DE PAGOS MIXTOS
+   ========================================== */
+.modal-pagos-mixtos {
+    background: #1a2555;
+    border-radius: 15px;
+    border: 3px solid #3f51b5;
+    width: 1000px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: slideIn 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-pagos-header {
+    background: #1e3a8a;
+    padding: 20px 30px;
+    border-bottom: 3px solid #3b82f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-pagos-header h2 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.btn-close-modal {
+    background: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-close-modal:hover {
+    background: #d32f2f;
+    transform: rotate(90deg);
+}
+
+.modal-pagos-body {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.pagos-panel-izquierdo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.total-venta-box {
+    background: #2a3565;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #3a4585;
+}
+
+.total-venta-box h3 {
+    color: #ffeb3b;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.total-monto {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.total-usd-pago {
+    color: #4caf50;
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.total-bs-pago {
+    color: #66bb6a;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.resumen-productos-pago {
+    background: #252f5f;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.resumen-productos-pago h4 {
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.lista-productos-pago {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.producto-pago-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #1a2555;
+    border-radius: 6px;
+}
+
+.producto-nombre {
+    color: #fff;
+    font-size: 13px;
+}
+
+.producto-precio {
+    color: #4caf50;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.pagos-panel-derecho {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.agregar-pago-section {
+    background: #2a3565;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #3a4585;
+}
+
+.agregar-pago-section h3 {
+    color: #ffeb3b;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.form-pago-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-pago-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-pago-item label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.select-metodo,
+.input-monto-pago {
+    padding: 10px;
+    background: #0f1535;
+    border: 2px solid #2a3f7f;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.select-metodo:focus,
+.input-monto-pago:focus {
+    outline: none;
+    border-color: #3f51b5;
+}
+
+.btn-agregar-pago {
+    width: 100%;
+    padding: 12px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-agregar-pago:hover {
+    background: #66bb6a;
+    transform: translateY(-2px);
+}
+
+.pagos-agregados-section {
+    background: #252f5f;
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.pagos-agregados-section h3 {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.tabla-pagos-agregados {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-pagos-agregados th {
+    text-align: left;
+    color: #ffeb3b;
+    font-size: 12px;
+    padding: 8px;
+    border-bottom: 2px solid #3a4585;
+}
+
+.tabla-pagos-agregados td {
+    padding: 8px;
+    color: #fff;
+    font-size: 13px;
+    border-bottom: 1px solid #2a3f7f;
+}
+
+.sin-pagos {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+.btn-eliminar-pago {
+    background: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-eliminar-pago:hover {
+    background: #d32f2f;
+}
+
+.estado-pago-section {
+    background: #2a3565;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Barra de Progreso de Pago */
+.progreso-pago-container {
+    background: #1a2555;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.progreso-pago-label {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.progreso-barra-fondo {
+    background: #0f1535;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    border: 2px solid #2a3f7f;
+}
+
+.progreso-barra-relleno {
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease, background 0.3s;
+    border-radius: 8px;
+}
+
+.progreso-barra-relleno.parcial {
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
+}
+
+.progreso-barra-relleno.completo {
+    background: linear-gradient(90deg, #4caf50, #81c784);
+}
+
+.progreso-porcentaje {
+    color: #4caf50;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 8px;
+    transition: color 0.3s;
+}
+
+.estado-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #1a2555;
+    border-radius: 6px;
+}
+
+.estado-label {
+    color: #aaa;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.estado-valor {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.estado-valor.positivo {
+    color: #4caf50;
+}
+
+.estado-valor.faltante {
+    color: #ff9800;
+}
+
+.estado-valor.cambio {
+    color: #2196F3;
+}
+
+.opciones-cambio {
+    background: #252f5f;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.opciones-cambio h4 {
+    color: #ffeb3b;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.form-cambio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-cambio-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-cambio-item label {
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.input-cambio {
+    padding: 10px;
+    background: #0f1535;
+    border: 2px solid #2a3f7f;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+}
+
+.input-cambio:focus {
+    outline: none;
+    border-color: #3f51b5;
+}
+
+.input-cambio:read-only {
+    background: #1a2040;
+    color: #888;
+}
+
+.botones-finales-pago {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.btn-finalizar-venta-pago,
+.btn-cancelar-venta-pago {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-finalizar-venta-pago {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn-finalizar-venta-pago:hover:not(:disabled) {
+    background: #66bb6a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+}
+
+.btn-finalizar-venta-pago:disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.btn-cancelar-venta-pago {
+    background: #757575;
+    color: #fff;
+}
+
+.btn-cancelar-venta-pago:hover {
+    background: #9e9e9e;
+    transform: translateY(-2px);
+}
+
+
 
