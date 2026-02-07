@@ -809,35 +809,81 @@ function abrirModalPagos() {
         return;
     }
     
-    // Calcular total de la venta
     totalVentaActual = carrito.reduce((sum, item) => sum + (item.precioVenta * item.cantidad), 0);
-    
-    // Resetear pagos
     pagosAgregados = [];
     
-    // Llenar información del modal
+    // Llenar montos de cabecera
     document.getElementById('totalVentaUSD').textContent = `$${totalVentaActual.toFixed(2)}`;
     document.getElementById('totalVentaBS').textContent = `Bs ${(totalVentaActual * tasaDolar).toFixed(2)}`;
     
-    // Llenar lista de productos
-    const listaProductos = document.getElementById('listaProductosPago');
-    listaProductos.innerHTML = carrito.map(item => `
-        <div class="producto-pago-item">
-            <span class="producto-nombre">${item.cantidad}x ${item.nombre}</span>
-            <span class="producto-precio">$${(item.precioVenta * item.cantidad).toFixed(2)}</span>
-        </div>
-    `).join('');
-    
-    // Resetear formulario
-    document.getElementById('metodoPago').selectedIndex = 0;
-    document.getElementById('montoPago').value = '';
-    
-    // Actualizar estado
+    renderizarPagosAgregados();
     actualizarEstadoPagos();
     
-    // Mostrar modal
-    document.getElementById('modalPagosMixtos').style.display = 'flex';
+    const modal = document.getElementById('modalPagosMixtos');
+    modal.style.display = 'flex';
+
+    // Seleccionamos el método por defecto (USD) y calculamos el monto
+    const selectMetodo = document.getElementById('metodoPago');
+    selectMetodo.value = 'EFECTIVO_USD';
+    seleccionarMetodoPago('EFECTIVO_USD');
+
+    // Foco automático al menú para poder usar flechas del teclado de una vez
+    setTimeout(() => selectMetodo.focus(), 100);
 }
+
+function seleccionarMetodoPago(metodo) {
+    const inputMonto = document.getElementById('montoPago');
+    const labelMoneda = document.getElementById('labelMonedaInput');
+    const selectMetodo = document.getElementById('metodoPago');
+
+    // Sincronizar el select por si la función fue llamada por atajo de teclado
+    selectMetodo.value = metodo;
+
+    // Calcular faltante real
+    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
+    const faltanteUSD = totalVentaActual - totalPagadoUSD;
+
+    if (metodo === 'EFECTIVO_USD') {
+        inputMonto.value = faltanteUSD > 0 ? faltanteUSD.toFixed(2) : "0.00";
+        labelMoneda.textContent = "Monto en Dólares ($):";
+    } else {
+        const faltanteBS = (faltanteUSD > 0 ? faltanteUSD : 0) * tasaDolar;
+        inputMonto.value = faltanteBS.toFixed(2);
+        labelMoneda.textContent = "Monto en Bolívares (Bs):";
+    }
+
+    // Poner foco en el monto para solo dar Enter
+    inputMonto.focus();
+    setTimeout(() => inputMonto.select(), 10);
+}
+
+// Escuchar teclas F4-F9 y Enter
+window.addEventListener('keydown', (e) => {
+    const modalPagos = document.getElementById('modalPagosMixtos');
+    if (modalPagos && modalPagos.style.display === 'flex') {
+        const atajos = {
+            'F4': 'EFECTIVO_USD',
+            'F5': 'EFECTIVO_BS',
+            'F6': 'BIOPAGO',
+            'F7': 'PUNTO_VENTA',
+            'F8': 'PAGO_MOVIL',
+            'F9': 'NOTA_CREDITO'
+        };
+
+        if (atajos[e.key]) {
+            e.preventDefault();
+            seleccionarMetodoPago(atajos[e.key]);
+        }
+
+        if (e.key === 'Enter') {
+            // Si el foco está en el monto, agrega el pago
+            if (document.activeElement.id === 'montoPago' || document.activeElement.id === 'metodoPago') {
+                e.preventDefault();
+                agregarMetodoPago();
+            }
+        }
+    }
+});
 
 function cerrarModalPagos() {
     document.getElementById('modalPagosMixtos').style.display = 'none';
@@ -853,40 +899,43 @@ function agregarMetodoPago() {
         return;
     }
     
-    // Convertir a USD si es en Bs
-    let montoUSD = monto;
+    let montoUSD = 0;
     let montoBs = 0;
-    let moneda = 'USD';
-    
-    if (metodo === 'EFECTIVO_BS') {
-        montoUSD = monto / tasaDolar;
-        montoBs = monto;
-        moneda = 'Bs';
-    } else {
+    let moneda = '';
+
+    // LÓGICA INVERTIDA: Solo EFECTIVO_USD es Dólares. Todo lo demás es Bolívares.
+    if (metodo === 'EFECTIVO_USD') {
+        montoUSD = monto;
         montoBs = monto * tasaDolar;
+        moneda = 'USD';
+    } else {
+        // BIOPAGO, PUNTO_VENTA, PAGO_MOVIL, EFECTIVO_BS, etc.
+        montoBs = monto;
+        montoUSD = monto / tasaDolar; // Convertimos el monto ingresado en Bs a su equivalente en USD
+        moneda = 'Bs';
     }
     
-    // Agregar pago
+    // Agregar al array de pagos
     pagosAgregados.push({
         metodo: metodo,
-        monto: monto,
-        montoUSD: montoUSD,
-        montoBs: montoBs,
-        moneda: moneda
+        monto: monto,      // El monto tal cual lo escribió el usuario
+        montoUSD: montoUSD, // El valor real en dólares para cálculos internos
+        montoBs: montoBs,   // El valor real en bolívares para cálculos internos
+        moneda: moneda      // Para saber qué símbolo mostrar en la tabla ($ o Bs)
     });
     
-    // Actualizar tabla
+    // Actualizar interfaz
     renderizarPagosAgregados();
-    
-    // Actualizar estado
     actualizarEstadoPagos();
     
-    // Limpiar formulario
+    // Limpiar input y devolver el foco
     document.getElementById('montoPago').value = '';
+    document.getElementById('montoPago').focus();
 }
 
 function renderizarPagosAgregados() {
     const tbody = document.getElementById('listaPagosAgregados');
+    if (!tbody) return; // Seguridad
     
     if (pagosAgregados.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" class="sin-pagos">No hay pagos registrados</td></tr>';
@@ -895,18 +944,14 @@ function renderizarPagosAgregados() {
     
     tbody.innerHTML = pagosAgregados.map((pago, index) => {
         const nombreMetodo = getNombreMetodo(pago.metodo);
-        const montoDisplay = pago.moneda === 'Bs' ? 
-            `Bs ${pago.monto.toFixed(2)}` : 
-            `$${pago.monto.toFixed(2)}`;
+        const simbolo = pago.moneda === 'Bs' ? 'Bs ' : '$';
         
         return `
             <tr>
                 <td>${nombreMetodo}</td>
-                <td>${montoDisplay}</td>
+                <td>${simbolo}${pago.monto.toFixed(2)}</td>
                 <td>
-                    <button class="btn-eliminar-pago" onclick="eliminarPago(${index})">
-                        ❌
-                    </button>
+                    <button class="btn-eliminar-pago" onclick="eliminarPago(${index})">❌</button>
                 </td>
             </tr>
         `;
@@ -933,28 +978,27 @@ function eliminarPago(index) {
 }
 
 function actualizarEstadoPagos() {
-    // Calcular total pagado en USD
+    // Calcular total pagado en USD y Bs
     const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
     const totalPagadoBS = totalPagadoUSD * tasaDolar;
+    
+    // Calcular faltante
     const faltante = totalVentaActual - totalPagadoUSD;
     const faltanteBS = Math.abs(faltante) * tasaDolar;
+    
+    // Calcular cambio
     const cambio = totalPagadoUSD - totalVentaActual;
+    const cambioBS = cambio * tasaDolar;
     
-    // Actualizar displays en USD
-    document.getElementById('totalPagado').textContent = `${totalPagadoUSD.toFixed(2)}`;
-    document.getElementById('faltantePago').textContent = `${Math.abs(faltante).toFixed(2)}`;
+    // 1. Actualizar Total Pagado Unificado
+    document.getElementById('totalPagado').textContent = `$${totalPagadoUSD.toFixed(2)} (Bs ${totalPagadoBS.toFixed(2)})`;
     
-    // Actualizar displays en Bs
-    const totalPagadoBSElement = document.getElementById('totalPagadoBS');
-    const faltanteBSElement = document.getElementById('faltantePagoBS');
-    if (totalPagadoBSElement) {
-        totalPagadoBSElement.textContent = `Bs ${totalPagadoBS.toFixed(2)}`;
-    }
-    if (faltanteBSElement) {
-        faltanteBSElement.textContent = `Bs ${faltanteBS.toFixed(2)}`;
-    }
+    // 2. Actualizar Faltante Unificado (si hay cambio, el faltante es 0)
+    const faltanteMostrarUSD = faltante > 0 ? faltante : 0;
+    const faltanteMostrarBS = faltante > 0 ? faltanteBS : 0;
+    document.getElementById('faltantePago').textContent = `$${faltanteMostrarUSD.toFixed(2)} (Bs ${faltanteMostrarBS.toFixed(2)})`;
     
-    // Actualizar barra de progreso
+    // 3. Actualizar barra de progreso
     const barraProgreso = document.getElementById('barraProgresoPago');
     const porcentajePago = document.getElementById('porcentajePago');
     
@@ -980,21 +1024,23 @@ function actualizarEstadoPagos() {
         }
     }
     
-    // Mostrar/ocultar secciones según el estado
+    // 4. Mostrar/ocultar secciones según el estado (Cambio)
     const cambioSection = document.getElementById('cambioSection');
     const opcionesCambio = document.getElementById('opcionesCambio');
     const btnFinalizar = document.getElementById('btnFinalizarPago');
     
     if (cambio > 0.01) {
-        // Hay cambio
+        // Hay cambio a devolver
         cambioSection.style.display = 'flex';
         opcionesCambio.style.display = 'block';
-        document.getElementById('cambioPago').textContent = `${cambio.toFixed(2)}`;
         
-        // Habilitar botón si se ha especificado cómo dar el cambio
-        const cambioUSD = parseFloat(document.getElementById('cambioUSD').value) || 0;
-        const cambioBs = parseFloat(document.getElementById('cambioBS').value) || 0;
-        const totalCambioEspecificado = cambioUSD + (cambioBs / tasaDolar);
+        // Mostrar cambio unificado
+        document.getElementById('cambioPago').textContent = `$${cambio.toFixed(2)} (Bs ${cambioBS.toFixed(2)})`;
+        
+        // Validar si el desglose del cambio coincide con el cambio total
+        const cambioInputUSD = parseFloat(document.getElementById('cambioUSD').value) || 0;
+        const cambioInputBs = parseFloat(document.getElementById('cambioBS').value) || 0;
+        const totalCambioEspecificado = cambioInputUSD + (cambioInputBs / tasaDolar);
         
         btnFinalizar.disabled = Math.abs(totalCambioEspecificado - cambio) > 0.01;
     } else {
@@ -1075,4 +1121,64 @@ async function finalizarVentaConPagos() {
     cerrarModalPagos();
 }
 
+// Cambiar el texto de ayuda según el método de pago seleccionado
+document.getElementById('metodoPago').addEventListener('change', function(e) {
+    const inputMonto = document.getElementById('montoPago');
+    if (e.target.value === 'EFECTIVO_USD') {
+        inputMonto.placeholder = "Monto en $";
+    } else {
+        inputMonto.placeholder = "Monto en Bolívares (Bs)";
+    }
+});
 
+// --- LÓGICA DE TECLADO PARA EL MODAL DE PAGOS ---
+window.addEventListener('keydown', (e) => {
+    const modalPagos = document.getElementById('modalPagosMixtos');
+    if (modalPagos.style.display === 'flex') {
+        // Mapeo de teclas F a métodos
+        const atajos = {
+            'F4': 'EFECTIVO_USD',
+            'F5': 'EFECTIVO_BS',
+            'F6': 'BIOPAGO',
+            'F7': 'PUNTO_VENTA',
+            'F8': 'PAGO_MOVIL',
+            'F9': 'NOTA_CREDITO'
+        };
+
+        if (atajos[e.key]) {
+            e.preventDefault();
+            seleccionarMetodoPago(atajos[e.key]);
+        }
+
+        // Si presiona Enter dentro del input de monto, agrega el pago
+        if (e.key === 'Enter' && document.activeElement.id === 'montoPago') {
+            agregarMetodoPago();
+        }
+    }
+});
+
+function seleccionarMetodoPago(metodo) {
+    const select = document.getElementById('metodoPago');
+    const inputMonto = document.getElementById('montoPago');
+    const labelMoneda = document.getElementById('labelMonedaInput');
+    
+    select.value = metodo;
+
+    // Calcular cuánto falta
+    const totalPagadoUSD = pagosAgregados.reduce((sum, pago) => sum + pago.montoUSD, 0);
+    const faltanteUSD = totalVentaActual - totalPagadoUSD;
+
+    // Auto-completar el monto
+    if (metodo === 'EFECTIVO_USD') {
+        inputMonto.value = faltanteUSD > 0 ? faltanteUSD.toFixed(2) : "0.00";
+        labelMoneda.textContent = "Monto USD ($):";
+    } else {
+        const faltanteBS = faltanteUSD * tasaDolar;
+        inputMonto.value = faltanteBS > 0 ? faltanteBS.toFixed(2) : "0.00";
+        labelMoneda.textContent = "Monto Bs:";
+    }
+
+    // Seleccionar el texto para que el usuario pueda escribir encima si desea
+    inputMonto.focus();
+    setTimeout(() => inputMonto.select(), 10);
+}
