@@ -1238,7 +1238,7 @@ body {
 
 .total-label {
     color: #a5d6a7;
-    font-size: 11px;
+    font-size: 20px;
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -1597,3 +1597,285 @@ body {
     font-size: 16px;
 }
 .btn-eliminar-pago:hover { transform: scale(1.2); }
+
+/* --- NUEVOS BOTONES DE FINALIZAR --- */
+.acciones-finales-pago {
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-finalizar-sin-ticket,
+.btn-finalizar-con-ticket {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+/* Estilo Botón Solo Guardar (Gris/Azulado) */
+.btn-finalizar-sin-ticket {
+    background: #455a64;
+    color: #fff;
+    border: 2px solid #607d8b;
+}
+.btn-finalizar-sin-ticket:hover:not(:disabled) { background: #546e7a; }
+
+/* Estilo Botón Con Ticket (Verde) */
+.btn-finalizar-con-ticket {
+    background: #2e7d32;
+    color: #fff;
+    border: 2px solid #4caf50;
+}
+.btn-finalizar-con-ticket:hover:not(:disabled) { background: #388e3c; }
+
+.btn-finalizar-sin-ticket:disabled,
+.btn-finalizar-con-ticket:disabled {
+    background: #222;
+    color: #555;
+    border-color: #333;
+    cursor: not-allowed;
+}
+
+/* --- ESTILOS DE IMPRESIÓN (TICKET 58MM) --- */
+.ticket-oculto {
+    display: none; /* Oculto en pantalla normal */
+}
+
+@media print {
+    /* 1. Ocultar TODO el sistema */
+    body * {
+        visibility: hidden;
+        height: 0;
+        overflow: hidden;
+    }
+
+    /* 2. Mostrar SOLO el ticket */
+    #ticket-impresion, #ticket-impresion * {
+        visibility: visible;
+        height: auto;
+        overflow: visible;
+    }
+
+    /* 3. Configuración de la página física */
+    @page {
+        size: 58mm auto; /* Ancho 58mm, alto automático */
+        margin: 0;       /* Sin márgenes de navegador */
+    }
+
+    /* 4. Formato del Ticket */
+    #ticket-impresion {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 58mm;
+        background: #fff;
+        color: #000;
+        font-family: 'Courier New', Courier, monospace; /* Fuente tipo recibo */
+        font-size: 11px; /* Tamaño legible para 58mm */
+        line-height: 1.2;
+        padding: 2px 0;
+    }
+
+    .ticket-centrado {
+        text-align: center;
+        display: block;
+    }
+
+    .ticket-linea {
+        display: block;
+        margin: 2px 0;
+        white-space: nowrap; /* Evita saltos de línea raros en los guiones */
+        overflow: hidden;
+    }
+
+    /* Estructura Producto */
+    .ticket-prod-row {
+        margin-bottom: 4px;
+        border-bottom: 1px dashed #ccc; /* Separador sutil opcional */
+        padding-bottom: 2px;
+    }
+    .ticket-prod-nombre {
+        display: block;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 11px;
+    }
+    .ticket-prod-detalle {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+    }
+
+    /* Estructura Totales */
+    .ticket-total-row {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 12px;
+        margin: 2px 0;
+    }
+
+    /* Pagos a la derecha */
+    .ticket-pagos-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end; /* Alineado a la derecha */
+        margin-top: 5px;
+    }
+}
+
+/* --- AGREGAR AL FINAL DE STYLES.CSS --- */
+
+/* BOTONES DE FINALIZAR (NUEVOS) */
+.acciones-finales-pago {
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-finalizar-sin-ticket,
+.btn-finalizar-con-ticket {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px; /* Un poco más pequeño para que quepa */
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Estilo Botón Solo Guardar (Gris Azulado) */
+.btn-finalizar-sin-ticket {
+    background: #455a64;
+    border: 2px solid #607d8b;
+}
+.btn-finalizar-sin-ticket:hover:not(:disabled) { background: #546e7a; }
+
+/* Estilo Botón Con Ticket (Verde) */
+.btn-finalizar-con-ticket {
+    background: #2e7d32;
+    border: 2px solid #4caf50;
+}
+.btn-finalizar-con-ticket:hover:not(:disabled) { background: #388e3c; }
+
+/* Estado deshabilitado para ambos */
+.btn-finalizar-sin-ticket:disabled,
+.btn-finalizar-con-ticket:disabled {
+    background: #222;
+    color: #555;
+    border-color: #333;
+    cursor: not-allowed;
+}
+
+/* --- ESTILOS DE IMPRESIÓN (TICKET 58MM) --- */
+.ticket-oculto {
+    display: none;
+}
+
+/* ==========================================
+   ESTILOS DE IMPRESIÓN (TICKET 58MM) - AJUSTADO
+   ========================================== */
+.ticket-oculto {
+    display: none;
+}
+
+@media print {
+    /* 1. Ocultar todo menos el ticket */
+    body > *:not(#ticket-impresion) {
+        display: none !important;
+    }
+
+    /* 2. Resetear márgenes del navegador */
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    /* 3. Configurar la página física */
+    @page {
+        size: 58mm auto; /* Papel de 58mm */
+        margin: 0mm;     /* Sin márgenes de navegador */
+    }
+
+    /* 4. Contenedor del Ticket */
+    #ticket-impresion {
+        display: block !important;
+        width: 48mm; /* 58mm - márgenes de seguridad */
+        margin: 0 auto; /* Centrado en el papel */
+        padding: 5px 0; /* Un poco de aire arriba/abajo */
+        background: #fff;
+        color: #000;
+        
+        /* FUENTE Y TAMAÑO CLAVE PARA 58MM */
+        font-family: 'Courier New', Courier, monospace; 
+        font-size: 10px; /* Reducido para que quepa bien */
+        line-height: 1.1; /* Líneas más juntas */
+        font-weight: bold; /* Para que la térmica marque bien */
+    }
+
+    /* Alineaciones */
+    .ticket-centrado {
+        text-align: center;
+        display: block;
+    }
+    
+    /* Líneas separadoras: evitan desbordamiento */
+    .ticket-linea {
+        display: block;
+        margin: 2px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip; /* Corta si se pasa, no hace salto */
+    }
+
+    /* Productos */
+    .ticket-prod-row {
+        margin-bottom: 4px;
+        border-bottom: 1px dashed #000; /* Separador sutil entre productos */
+        padding-bottom: 2px;
+    }
+
+    .ticket-prod-nombre {
+        display: block;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin-bottom: 1px;
+    }
+
+    .ticket-prod-detalle {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+    }
+
+    /* Totales */
+    .ticket-doble-columna {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        font-size: 11px; /* Totales un pelín más grandes */
+    }
+    
+    .ticket-pagos-bloque {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        font-size: 10px;
+    }
+}

@@ -103,96 +103,103 @@
     <!-- Modal de Pagos Mixtos -->
     <div id="modalPagosMixtos" class="modal-overlay" style="display: none;">
         <div class="modal-pagos-mixtos">
-    <div class="modal-pagos-header-compacto">
-        <h2>💰 PROCESAR PAGO</h2>
-        <button class="btn-close-modal-small" onclick="cerrarModalPagos()">✕</button>
-    </div>
-    
-    <div class="modal-pagos-body-compacto">
-        <!-- Panel Izquierdo: Totales y Tabla -->
-        <div class="pagos-panel-izquierdo-compacto">
-            <div class="total-venta-box-small">
-                <span class="label-mini">TOTAL A PAGAR</span>
-                <div class="montos-principales">
-                    <span class="usd-big" id="totalVentaUSD">$0.00</span>
-                    <span class="bs-medium" id="totalVentaBS">Bs 0.00</span>
-                </div>
+            <div class="modal-pagos-header-compacto">
+                <h2>💰 PROCESAR PAGO</h2>
+                <button class="btn-close-modal-small" onclick="cerrarModalPagos()">✕</button>
             </div>
             
-            <div class="pagos-agregados-container">
-                <span class="label-mini">PAGOS REGISTRADOS</span>
-                <div class="tabla-scroll-mini">
-                    <table class="tabla-pagos-compacta">
-                        <tbody id="listaPagosAgregados">
-                            <!-- Filas dinámicas -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Panel Derecho: Registro y Estado -->
-        <div class="pagos-panel-derecho-compacto">
-            <div class="registro-pago-card">
-                <div class="form-compacto">
-                    <div class="input-group-mini">
-                        <label>Método (F4-F9):</label>
-                        <select id="metodoPago" class="select-compacto" onchange="seleccionarMetodoPago(this.value)">
-                            <option value="EFECTIVO_USD">F4 - Efectivo USD</option>
-                            <option value="EFECTIVO_BS">F5 - Efectivo Bs</option>
-                            <option value="BIOPAGO">F6 - Biopago</option>
-                            <option value="PUNTO_VENTA">F7 - Punto de Venta</option>
-                            <option value="PAGO_MOVIL">F8 - Pago Móvil</option>
-                            <option value="NOTA_CREDITO">F9 - Nota Crédito</option>
-                        </select>
+            <div class="modal-pagos-body-compacto">
+                <!-- Panel Izquierdo: Totales y Tabla -->
+                <div class="pagos-panel-izquierdo-compacto">
+                    <div class="total-venta-box-small">
+                        <span class="label-mini">TOTAL A PAGAR</span>
+                        <div class="montos-principales">
+                            <span class="usd-big" id="totalVentaUSD">$0.00</span>
+                            <span class="bs-medium" id="totalVentaBS">Bs 0.00</span>
+                        </div>
                     </div>
                     
-                    <div class="input-group-mini">
-                        <label id="labelMonedaInput">Monto:</label>
-                        <input type="number" id="montoPago" class="input-monto-compacto" step="0.01">
+                    <div class="pagos-agregados-container">
+                        <span class="label-mini">PAGOS REGISTRADOS</span>
+                        <div class="tabla-scroll-mini">
+                            <table class="tabla-pagos-compacta">
+                                <tbody id="listaPagosAgregados">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
-                    <button class="btn-agregar-compacto" onclick="agregarMetodoPago()">
-                        + AGREGAR PAGO (Enter)
-                    </button>
-                </div>
-            </div>
-            
-            <div class="resumen-pago-card">
-                <div class="progreso-mini">
-                    <div class="barra-fondo-mini"><div class="barra-relleno-mini" id="barraProgresoPago"></div></div>
-                    <span id="porcentajePago">0%</span>
                 </div>
                 
-                <div class="linea-estado">
-                    <span>PAGADO:</span>
-                    <b class="pos" id="totalPagado">$0.00 (Bs 0.00)</b>
-                </div>
-                <div class="linea-estado">
-                    <span>FALTANTE:</span>
-                    <b class="neg" id="faltantePago">$0.00 (Bs 0.00)</b>
-                </div>
-                <div id="cambioSection" class="linea-estado" style="display: none;">
-                    <span>CAMBIO:</span>
-                    <b class="blu" id="cambioPago">$0.00 (Bs 0.00)</b>
-                </div>
-            </div>
+                <!-- Panel Derecho: Registro y Estado -->
+                <div class="pagos-panel-derecho-compacto">
+                    <div class="registro-pago-card">
+                        <div class="form-compacto">
+                            <div class="input-group-mini">
+                                <label>Método (F4-F9):</label>
+                                <select id="metodoPago" class="select-compacto" onchange="seleccionarMetodoPago(this.value)">
+                                    <option value="EFECTIVO_USD">F4 - Efectivo USD</option>
+                                    <option value="EFECTIVO_BS">F5 - Efectivo Bs</option>
+                                    <option value="BIOPAGO">F6 - Biopago</option>
+                                    <option value="PUNTO_VENTA">F7 - Punto de Venta</option>
+                                    <option value="PAGO_MOVIL">F8 - Pago Móvil</option>
+                                    <option value="NOTA_CREDITO">F9 - Nota Crédito</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group-mini">
+                                <label id="labelMonedaInput">Monto:</label>
+                                <input type="number" id="montoPago" class="input-monto-compacto" step="0.01">
+                            </div>
 
-            <div id="opcionesCambio" class="cambio-box-mini" style="display: none;">
-                <label>Entregar Cambio:</label>
-                <div class="inputs-cambio-row">
-                    <input type="number" id="cambioUSD" placeholder="En $" oninput="calcularCambioBs()">
-                    <input type="number" id="cambioBS" placeholder="En Bs" readonly>
+                            <button class="btn-agregar-compacto" onclick="agregarMetodoPago()">
+                                + AGREGAR PAGO (Enter)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="resumen-pago-card">
+                        <div class="progreso-mini">
+                            <div class="barra-fondo-mini"><div class="barra-relleno-mini" id="barraProgresoPago"></div></div>
+                            <span id="porcentajePago">0%</span>
+                        </div>
+                        
+                        <div class="linea-estado">
+                            <span>PAGADO:</span>
+                            <b class="pos" id="totalPagado">$0.00 (Bs 0.00)</b>
+                        </div>
+                        <div class="linea-estado">
+                            <span>FALTANTE:</span>
+                            <b class="neg" id="faltantePago">$0.00 (Bs 0.00)</b>
+                        </div>
+                        <div id="cambioSection" class="linea-estado" style="display: none;">
+                            <span>CAMBIO:</span>
+                            <b class="blu" id="cambioPago">$0.00 (Bs 0.00)</b>
+                        </div>
+                    </div>
+
+                    <div id="opcionesCambio" class="cambio-box-mini" style="display: none;">
+                        <label>Entregar Cambio:</label>
+                        <div class="inputs-cambio-row">
+                            <input type="number" id="cambioUSD" placeholder="En $" oninput="calcularCambioBs()">
+                            <input type="number" id="cambioBS" placeholder="En Bs" readonly>
+                        </div>
+                    </div>
+                    
+                    <!-- NUEVOS BOTONES DE FINALIZACIÓN -->
+                    <div class="acciones-finales-pago">
+                        <button class="btn-finalizar-sin-ticket" onclick="finalizarVentaConPagos(false)" id="btnFinalizarSinTicket" disabled>
+                            ✓ COBRAR
+                        </button>
+                        <button class="btn-finalizar-con-ticket" onclick="finalizarVentaConPagos(true)" id="btnFinalizarConTicket" disabled>
+                            🖨️ COBRAR E IMPRIMIR
+                        </button>
+                    </div>
+
                 </div>
             </div>
-            
-            <button class="btn-finalizar-venta-pago-mini" onclick="finalizarVentaConPagos()" id="btnFinalizarPago" disabled>
-                ✓ FINALIZAR COMPRA
-            </button>
         </div>
     </div>
-</div>
-             </div>
 
     <!-- Modal/Tarjeta de Cantidad -->
     <div id="modalCantidadProducto" class="modal-overlay" style="display: none;">
@@ -237,6 +244,9 @@
             </div>
         </div>
     </div>
+
+    <!-- TICKET OCULTO PARA IMPRESIÓN -->
+    <div id="ticket-impresion" class="ticket-oculto"></div>
 
     <script src="app.js"></script>
 </body>
