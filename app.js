@@ -213,17 +213,29 @@ function filtrarInventario(valor) {
     if (!tbody) return;
     
     if (!valor) {
-        // Si no hay búsqueda, mostrar mensaje
         tbody.innerHTML = '<tr><td colspan="7" class="sin-productos">Usa el buscador para encontrar productos</td></tr>';
         return;
     }
-    
-    const valorUpper = valor.toUpperCase();
+
+    // Detectar si es búsqueda "contiene" (con asterisco)
+    const esBusquedaLibre = valor.startsWith('*');
+    const busquedaLimpiada = esBusquedaLibre ? valor.substring(1).toUpperCase() : valor.toUpperCase();
+
+    if (esBusquedaLibre && busquedaLimpiada === "") return; // Si solo puso el * no buscamos nada aún
+
     const filtrado = inventario
-        .filter(p => 
-            p.nombre.toUpperCase().startsWith(valorUpper) ||
-            p.codigo.toString().startsWith(valor)
-        )
+        .filter(p => {
+            const nombre = p.nombre.toUpperCase();
+            const codigo = p.codigo.toString();
+            
+            if (esBusquedaLibre) {
+                // Busca en cualquier parte del texto
+                return nombre.includes(busquedaLimpiada) || codigo.includes(busquedaLimpiada);
+            } else {
+                // Busca solo al principio (comportamiento original)
+                return nombre.startsWith(busquedaLimpiada) || codigo.startsWith(busquedaLimpiada);
+            }
+        })
         .sort((a, b) => a.nombre.localeCompare(b.nombre));
     
     if (filtrado.length === 0) {
@@ -245,7 +257,7 @@ function filtrarInventario(valor) {
             <td>${gananciaPorcentaje.toFixed(1)}%</td>
             <td>
                 <button class="btn-modificar" onclick="abrirModalModificar(${p.codigo})">
-                    ✏️ Modificar
+                    ✏️
                 </button>
             </td>
         </tr>
@@ -406,22 +418,32 @@ function buscarEnPOS(valor) {
     const divResultados = document.getElementById('resultados-busqueda');
     if (!divResultados) return;
     
-    indiceSeleccionado = -1; // Resetear índice
+    indiceSeleccionado = -1;
     
     if (!valor) { 
         divResultados.innerHTML = '<div class="no-products">Busca un producto para agregar a la venta</div>'; 
         return; 
     }
 
-    // Filtrar productos que empiecen con el texto buscado (orden alfabético)
-    const valorUpper = valor.toUpperCase();
+    // Detectar si es búsqueda "contiene" (con asterisco)
+    const esBusquedaLibre = valor.startsWith('*');
+    const busquedaLimpiada = esBusquedaLibre ? valor.substring(1).toUpperCase() : valor.toUpperCase();
+
+    if (esBusquedaLibre && busquedaLimpiada === "") return;
+
     const filtrados = inventario
-        .filter(p => 
-            p.nombre.toUpperCase().startsWith(valorUpper) ||
-            p.codigo.toString().startsWith(valor)
-        )
+        .filter(p => {
+            const nombre = p.nombre.toUpperCase();
+            const codigo = p.codigo.toString();
+
+            if (esBusquedaLibre) {
+                return nombre.includes(busquedaLimpiada) || codigo.includes(busquedaLimpiada);
+            } else {
+                return nombre.startsWith(busquedaLimpiada) || codigo.startsWith(busquedaLimpiada);
+            }
+        })
         .sort((a, b) => a.nombre.localeCompare(b.nombre))
-        .slice(0, 10);
+        .slice(0, 15); // Aumenté un poco el límite de resultados visibles
 
     if (filtrados.length === 0) {
         divResultados.innerHTML = '<div class="no-products">No se encontraron productos</div>';

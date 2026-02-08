@@ -1443,56 +1443,58 @@ body {
 /* ==========================================
    MODAL DE CANTIDAD DE PRODUCTO
    ========================================== */
+/* ==========================================
+   MODAL DE CANTIDAD DE PRODUCTO (COMPACTO)
+   ========================================== */
 .modal-cantidad-producto {
     background: #1a2555;
-    border-radius: 15px;
-    border: 3px solid #3f51b5;
-    width: 550px;
-    max-width: 90%;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    animation: slideIn 0.3s;
+    border-radius: 12px;
+    border: 2px solid #3f51b5;
+    width: 400px; /* Reducido de 550px */
+    max-width: 95%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: slideIn 0.2s ease-out;
 }
 
 .modal-cantidad-header {
     background: #1e3a8a;
-    padding: 20px 30px;
-    border-radius: 12px 12px 0 0;
-    border-bottom: 3px solid #3b82f6;
+    padding: 12px 20px; /* Más compacto */
+    border-radius: 10px 10px 0 0;
+    border-bottom: 2px solid #3b82f6;
 }
 
 .modal-cantidad-header h3 {
     color: #fff;
-    font-size: 20px;
-    font-weight: 900;
-    margin-bottom: 5px;
+    font-size: 16px; /* Texto más pequeño */
+    font-weight: 700;
+    margin-bottom: 2px;
 }
 
 .codigo-producto-cantidad {
-    color: #aaa;
-    font-size: 13px;
+    color: #94a3b8;
+    font-size: 11px;
 }
 
 .modal-cantidad-body {
-    padding: 30px;
+    padding: 20px; /* Reducido de 30px */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .precio-info-cantidad {
-    background: #252f5f;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-}
-
-.precio-unitario {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background: #161e44;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #2a3f7f;
 }
 
 .precio-label {
-    color: #aaa;
-    font-size: 13px;
+    color: #94a3b8;
+    font-size: 11px;
     font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
 }
 
 .precios-valores {
@@ -1502,117 +1504,99 @@ body {
 }
 
 .precio-dolar {
-    color: #4caf50;
-    font-size: 24px;
+    color: #10b981;
+    font-size: 18px; /* Reducido */
     font-weight: bold;
 }
 
 .precio-bs {
-    color: #66bb6a;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.cantidad-input-section {
-    margin-bottom: 25px;
+    color: #6ee7b7;
+    font-size: 14px;
 }
 
 .cantidad-input-section label {
-    color: #aaa;
-    font-size: 13px;
-    margin-bottom: 10px;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 8px;
     display: block;
     font-weight: 600;
 }
 
 .input-cantidad-producto {
     width: 100%;
-    padding: 15px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
-    border-radius: 8px;
+    padding: 10px;
+    background: #000;
     color: #fff;
-    font-size: 24px;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    font-size: 22px; /* Más balanceado */
     font-weight: bold;
     text-align: center;
-    transition: all 0.2s;
-}
-
-.input-cantidad-producto:focus {
-    outline: none;
-    border-color: #3f51b5;
-    background: #1a2040;
 }
 
 .total-producto-cantidad {
-    background: #4caf50;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    background: #065f46; /* Verde oscuro */
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.total-label {
+    color: #a7f3d0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .total-valores {
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    gap: 15px;
     align-items: baseline;
+    margin-top: 5px;
 }
 
 .total-dolar {
     color: #fff;
-    font-size: 32px;
+    font-size: 24px; /* Reducido de 32px */
     font-weight: 900;
 }
 
 .total-bs {
-    color: #e8f5e9;
-    font-size: 24px;
-    font-weight: 700;
+    color: #d1fae5;
+    font-size: 16px;
 }
 
+/* Botones más pequeños y en una sola línea */
 .modal-cantidad-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 10px;
 }
 
 .btn-cantidad-confirmar,
 .btn-cantidad-cancelar {
-    padding: 15px;
+    padding: 10px;
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .btn-cantidad-confirmar {
-    background: #4caf50;
+    background: #10b981;
     color: #fff;
-    grid-column: 1 / -1;
-}
-
-.btn-cantidad-confirmar:hover {
-    background: #66bb6a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
 }
 
 .btn-cantidad-cancelar {
-    background: #757575;
+    background: #4b5563;
     color: #fff;
-    grid-column: 1 / -1;
 }
 
-.btn-cantidad-cancelar:hover {
-    background: #9e9e9e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(117,117,117,0.4);
-}
+.btn-cantidad-confirmar:hover { background: #059669; }
+.btn-cantidad-cancelar:hover { background: #374151; }
 
 /* ==========================================
    SELECCIÓN CON TECLADO
@@ -1910,4 +1894,152 @@ body {
 .btn-eliminar-item {
     position: relative;
     z-index: 10;
+}
+
+/* --- CONTENEDOR RAIZ DE INVENTARIO DE BUSQUEDA --- */
+
+.modulo-inventario-full {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px); /* Ajustado para ganar cada pixel posible */
+    gap: 10px;
+}
+
+.modal-header-mini h2 {
+    font-size: 18px;
+    color: #ffeb3b;
+    margin-bottom: 5px;
+}
+
+/* --- FORMULARIO COMPACTO (Ahorra mucho espacio vertical) --- */
+.form-section-compacta {
+    background: #1a2555;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #2a3f7f;
+}
+
+.form-row-mini {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end; /* Alinea etiquetas arriba e inputs abajo */
+}
+
+.form-group label {
+    color: #aaa;
+    font-size: 11px; /* Texto pequeño */
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.input-mini {
+    padding: 6px 10px;
+    background: #0f1535;
+    border: 1px solid #3a4585;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+}
+
+.btn-guardar-mini {
+    padding: 7px 15px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.btn-guardar-mini:hover { background: #66bb6a; }
+
+/* --- SECCIÓN TABLA (EXPANDIDA AL MÁXIMO) --- */
+.productos-section-expandida {
+    flex: 1; /* Ocupa todo el resto de la pantalla */
+    display: flex;
+    flex-direction: column;
+    background: #1a2555;
+    border-radius: 8px;
+    border: 1px solid #2a3f7f;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.productos-header-mini {
+    padding: 8px 15px;
+    background: #1e295a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.productos-header-mini h3 {
+    font-size: 14px;
+    color: #fff;
+}
+
+.search-input-mini {
+    padding: 6px 12px;
+    background: #0a0e27;
+    border: 1px solid #3f51b5;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    width: 250px;
+}
+
+/* CONTENEDOR DE SCROLL */
+.table-container-full {
+    flex: 1;
+    overflow-y: auto;
+    background: #0f1535;
+}
+
+/* TABLA COMPACTA */
+.productos-table-compacta {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.productos-table-compacta thead {
+    position: sticky;
+    top: 0;
+    background: #1e295a;
+    z-index: 5;
+}
+
+.productos-table-compacta th {
+    padding: 8px 10px;
+    text-align: left;
+    color: #ffeb3b;
+    border-bottom: 2px solid #3a4585;
+    font-size: 12px;
+}
+
+.productos-table-compacta td {
+    padding: 6px 10px; /* Celdas mucho más delgadas */
+    border-bottom: 1px solid #1a2555;
+    font-size: 13px;
+    color: #eee;
+}
+
+.productos-table-compacta tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Botón modificar más pequeño */
+.btn-modificar {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+}
+
+/* SCROLLBAR FINO */
+.table-container-full::-webkit-scrollbar {
+    width: 6px;
+}
+.table-container-full::-webkit-scrollbar-thumb {
+    background: #3a4585;
+    border-radius: 3px;
 }

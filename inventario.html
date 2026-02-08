@@ -1,73 +1,67 @@
 <div class="modulo-inventario-full">
-    <div class="modal-header">
+    <div class="modal-header-mini">
         <h2>📋 GESTIÓN DE INVENTARIO</h2>
     </div>
     
-    <div class="modal-body">
-        <div class="form-section">
-            <h3>Agregar Nuevo Producto</h3>
-            <form id="formProducto" class="product-form" onsubmit="guardarEnInventario(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Código:</label>
-                        <input type="text" id="codigoProducto" class="form-input" 
-                               placeholder="Auto-generado" readonly>
-                    </div>
-                    <div class="form-group flex-2">
-                        <label>Nombre del Producto:</label>
-                        <input type="text" id="inv-nombre" class="form-input" 
-                               placeholder="Ej: HARINA PAN 1KG" required>
-                    </div>
+    <!-- Formulario Compacto -->
+    <div class="form-section-compacta">
+        <form id="formProducto" class="product-form" onsubmit="guardarEnInventario(event)">
+            <div class="form-row-mini">
+                <div class="form-group">
+                    <label>Código:</label>
+                    <input type="text" id="codigoProducto" class="input-mini" placeholder="Auto" readonly>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Precio Costo ($):</label>
-                        <input type="number" id="inv-costo" class="form-input" 
-                               step="0.01" min="0" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Precio Venta ($):</label>
-                        <input type="number" id="inv-precio" class="form-input" 
-                               step="0.01" min="0" placeholder="0.00" required>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-agregar">
-                            <span>+</span> Agregar Producto
-                        </button>
-                    </div>
+                <div class="form-group flex-2">
+                    <label>Nombre del Producto:</label>
+                    <input type="text" id="inv-nombre" class="input-mini" placeholder="Ej: HARINA PAN 1KG" required>
                 </div>
-            </form>
-        </div>
+                <div class="form-group">
+                    <label>Costo ($):</label>
+                    <input type="number" id="inv-costo" class="input-mini" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Venta ($):</label>
+                    <input type="number" id="inv-precio" class="input-mini" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group btn-align-bottom">
+                    <button type="submit" class="btn-guardar-mini">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-        <div class="productos-section">
-            <div class="productos-header-section">
-                <h3>Lista de Productos en Inventario</h3>
-                <div class="search-box">
-                    <input type="text" id="buscarProducto" class="search-input" 
-                           placeholder="🔍 Buscar producto por código o nombre..."
-                           oninput="filtrarInventario(this.value)">
-                </div>
+    <!-- Sección de Tabla Expandida -->
+    <div class="productos-section-expandida">
+        <div class="productos-header-mini">
+            <h3>Lista de Productos</h3>
+            <div class="search-box-mini">
+                <input type="text" id="buscarProducto" class="search-input-mini" 
+                       placeholder="🔍 Buscar por código o nombre..."
+                       oninput="filtrarInventario(this.value)">
             </div>
-            <div class="table-container">
-                <table class="productos-table" id="tabla-stock">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Nombre del Producto</th>
-                            <th>Costo ($)</th>
-                            <th>Venta ($)</th>
-                            <th>Ganancia ($)</th>
-                            <th>Ganancia %</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="listaProductos">
-                        <tr>
-                            <td colspan="7" class="sin-productos">No hay productos registrados</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        </div>
+        
+        <div class="table-container-full">
+            <table class="productos-table-compacta">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre del Producto</th>
+                        <th>Costo</th>
+                        <th>Venta</th>
+                        <th>Ganancia</th>
+                        <th>%</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="listaProductos">
+                    <tr>
+                        <td colspan="7" class="sin-productos">Usa el buscador para ver productos</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
