@@ -9,7 +9,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0a0e27;
+    /* CAMBIO: Fondo Gris Oscuro */
+    background: #121212;
     color: #fff;
     height: 100vh;
     overflow: hidden;
@@ -18,15 +19,16 @@ body {
 }
 
 /* ==========================================
-   CABECERA AMARILLA
+   CABECERA AZUL (Top Bar)
    ========================================== */
 .top-bar {
-    background: linear-gradient(180deg, #ffeb3b 0%, #fdd835 100%);
+    /* CAMBIO: Azul degradado en lugar de amarillo */
+    background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
     height: 110px;
     display: flex;
     align-items: center;
     padding: 0 20px;
-    border-bottom: 4px solid #000;
+    border-bottom: 4px solid #0D47A1;
     box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     z-index: 10;
 }
@@ -40,19 +42,19 @@ body {
     width: 120px;
     height: 90px;
     background: #fff;
-    border: 3px solid #000;
+    border: 3px solid #0D47A1; /* Borde azul */
     border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 0px #000;
+    box-shadow: 0 4px 0px #08306b;
     transition: all 0.1s;
 }
 
 .big-button:active {
     transform: translateY(2px);
-    box-shadow: 0 1px 0px #000;
+    box-shadow: 0 1px 0px #08306b;
 }
 
 .button-icon {
@@ -61,13 +63,15 @@ body {
 
 .company-title {
     margin-left: 30px;
-    color: #000;
+    /* CAMBIO: Texto blanco porque el fondo ahora es azul */
+    color: #fff;
 }
 
 .company-title h1 {
     font-size: 32px;
     font-weight: 900;
     letter-spacing: -1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
 /* ==========================================
@@ -84,8 +88,9 @@ body {
    ========================================== */
 .sidebar {
     width: 320px;
-    background: #12193d;
-    border-right: 2px solid #1e2756;
+    /* CAMBIO: Gris medio */
+    background: #1e1e1e;
+    border-right: 2px solid #333;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -93,14 +98,15 @@ body {
 }
 
 .sidebar-header h3 {
-    color: #ffeb3b;
+    /* CAMBIO: Acento azul claro */
+    color: #64B5F6;
     font-size: 18px;
     margin-bottom: 10px;
     text-transform: uppercase;
 }
 
 .currency-label {
-    color: #aaa;
+    color: #bbb;
     font-size: 14px;
     margin-bottom: 10px;
 }
@@ -110,10 +116,11 @@ body {
 }
 
 .rate-display-box {
-    background: #1a2c5b;
+    /* CAMBIO: Tarjeta Gris un poco más clara */
+    background: #2d2d2d;
     padding: 20px;
     border-radius: 10px;
-    border: 2px solid #303f9f;
+    border: 2px solid #1976D2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,10 +131,10 @@ body {
 }
 
 .rate-display-box:hover {
-    background: #1e3470;
-    border-color: #3f51b5;
+    background: #383838;
+    border-color: #2196F3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(63,81,181,0.3);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
 }
 
 .rate-display-box:active {
@@ -135,7 +142,8 @@ body {
 }
 
 .rate-label {
-    color: #ffeb3b;
+    /* CAMBIO: Texto azul claro */
+    color: #64B5F6;
     font-weight: bold;
     font-size: 18px;
 }
@@ -153,14 +161,15 @@ body {
 
 /* Facturas del Día */
 .sidebar-section-facturas {
-    background: #1a2555;
+    /* CAMBIO: Gris medio/oscuro */
+    background: #252525;
     padding: 15px;
     border-radius: 10px;
-    border: 1px solid #2a3f7f;
+    border: 1px solid #333;
 }
 
 .facturas-header h3 {
-    color: #ffeb3b;
+    color: #64B5F6;
     font-size: 14px;
     margin-bottom: 15px;
     text-transform: uppercase;
@@ -217,45 +226,47 @@ body {
 /* ==========================================
    ÁREA DE CONTENIDO
    ========================================== */
-/* ==========================================
-   RESUMEN VERTICAL COMPACTO (SIN SCROLL)
-   ========================================== */
-
-/* Contenedor principal sin desperdicio de espacio */
-/* --- ÁREA DE CONTENIDO (PANEL CENTRAL) --- */
 .content-area {
-    flex: 1; /* Esto hace que ocupe todo el resto de la pantalla */
-    background: #0f1535;
+    flex: 1;
+    /* CAMBIO: Gris Oscuro de fondo principal */
+    background: #181818;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evita el scroll */
-    width: 100%;     /* Asegura que use todo el ancho */
+    overflow: hidden;
+    width: 100%;
 }
 
-/* --- TÍTULO AMARILLO (ANCHO COMPLETO) --- */
+/* --- TÍTULO INTERNO (Azul más claro) --- */
 .content-header {
-    background: #ffeb3b;
+    /* CAMBIO: Azul medio */
+    background: #1976D2;
     padding: 12px 25px;
-    margin: -20px -20px 20px -20px; /* Expande hasta los bordes del content-area */
-    border-bottom: 3px solid #000;
+    margin: -20px -20px 20px -20px;
+    border-bottom: 3px solid #0D47A1;
+}
+
+.content-header h2 {
+    font-size: 18px;
+    color: #fff; /* Texto blanco */
+    font-weight: bold;
 }
 
 /* --- CONTENEDOR DE RESUMEN --- */
 .resumen-ventas-full-width {
-    width: 100%; /* AQUÍ ESTÁ EL TRUCO: Ocupa el 100% de la derecha */
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* --- BLOQUE DE EFECTIVO (ESTILO IMAGEN) --- */
+/* --- BLOQUE DE EFECTIVO --- */
 .card-efectivo-negra {
-    background: #2d2d2d; /* El gris oscuro que querías */
+    background: #2d2d2d;
     border: 1px solid #444;
     border-radius: 8px;
     padding: 20px 30px;
-    width: 100%; /* Estira hasta la derecha */
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -263,14 +274,14 @@ body {
 }
 
 .titulo-efectivo {
-    color: #aaa;
+    color: #bbb;
     font-size: 15px;
     margin-bottom: 5px;
 }
 
 .monto-grande {
     color: #ffffff;
-    font-size: 32px; /* Un poco más grande para llenar el espacio */
+    font-size: 32px;
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: 0.5px;
@@ -285,13 +296,14 @@ body {
 }
 
 .item-pago {
-    background: #1a2555;
+    /* CAMBIO: Gris tarjeta */
+    background: #252525;
     padding: 12px 30px;
     border-radius: 8px;
     display: flex;
-    justify-content: space-between; /* Empuja el nombre a la izq y monto a la der */
+    justify-content: space-between;
     align-items: center;
-    border: 1px solid #2a3f7f;
+    border: 1px solid #333;
     width: 100%;
 }
 
@@ -309,15 +321,15 @@ body {
 
 /* --- BARRA TOTAL --- */
 .total-barra-final {
-    margin-top: auto; /* Se pega al fondo de la vista */
-    background: #10b981;
+    margin-top: auto;
+    background: #4caf50; /* Mantenemos verde para el total */
     padding: 18px 30px;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
 }
 
 .total-label {
@@ -332,452 +344,191 @@ body {
     color: #fff;
 }
 
-.content-header {
-    background: #ffeb3b;
-    padding: 8px 20px;
-    margin: -15px -15px 15px -15px;
-    border-bottom: 2px solid #000;
-}
-
-.content-header h2 {
-    font-size: 18px; /* Más pequeño para ahorrar altura */
-    color: #000;
-}
-
-.resumen-vertical-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Espacio mínimo entre filas */
-    height: 100%;
-}
-
-/* Filas base */
-.fila-resumen {
-    background: #1a2555;
-    padding: 12px 20px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #2a3f7f;
-}
-
-/* Fila de Efectivo (más destacada) */
-/* Estilos para el efectivo dividido */
-.fila-resumen.principal {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px !important; /* Más compacto */
-}
-
-.desglose-efectivo {
-    display: flex;
-    flex-direction: column; /* Uno arriba del otro */
-    gap: 4px;
-    text-align: right;
-}
-
-.item-efectivo {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 15px;
-}
-
-.moneda-label {
-    font-size: 11px;
-    font-weight: bold;
-    color: #94a3b8;
-}
-
-.monto-valor {
-    font-family: 'Courier New', Courier, monospace; /* Estilo contable */
-    font-weight: 900;
-    font-size: 20px;
-}
-
-.monto-valor.verde { color: #10b981; }
-.monto-valor.cian { color: #22d3ee; }
-
-/* Ajuste de otros pagos para que sean más finos y no generen scroll */
-.otros-pagos-lista .fila-resumen {
-    padding: 6px 20px;
-    margin-bottom: 2px;
-}
-
-.fila-resumen.principal .etiqueta {
-    display: block;
-    color: #94a3b8;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.fila-resumen.principal .monto-usd {
-    font-size: 28px;
-    font-weight: 900;
-    color: #10b981;
-    margin-right: 15px;
-}
-
-.fila-resumen.principal .monto-bs {
-    font-size: 18px;
-    color: #6ee7b7;
-}
-
-/* Lista de otros pagos más compacta */
-.otros-pagos-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.otros-pagos-lista .fila-resumen {
-    padding: 8px 20px; /* Muy compacto */
-    background: #161e44;
-}
-
-.metodo-nombre {
-    color: #aaa;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.metodo-monto {
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Fila de Total Final */
-.fila-total-final {
-    margin-top: auto; /* Empuja el total al fondo pero dentro de la vista */
-    background: #10b981;
-    padding: 15px 25px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    font-weight: 900;
-}
-
-.fila-total-final span:first-child {
-    font-size: 14px;
-}
-
-.fila-total-final #totalPagos {
-    font-size: 28px;
-}
-
-/* Ajuste para pantallas con poca altura */
-@media (max-height: 750px) {
-    .fila-resumen { padding: 6px 15px; }
-    .fila-resumen.principal .monto-usd { font-size: 22px; }
-    .fila-total-final { padding: 10px 20px; }
-    .fila-total-final #totalPagos { font-size: 22px; }
-}
-
-.efectivo-registrado {
-    background: #2a3565;
-    padding: 20px 25px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #3a4585;
-}
-
-.efectivo-title {
-    color: #aaa;
-    font-size: 13px;
-    margin-bottom: 12px;
-}
-
-.efectivo-amounts {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.amount-line {
-    font-size: 28px;
-    font-weight: bold;
-    color: #4caf50;
-}
-
-.amount-line.amount-bs {
-    font-size: 20px;
-    color: #66bb6a;
-}
-
-/* Payment Methods Section */
-.payment-methods-section {
-    background: #252f5f;
-    padding: 20px 25px;
-    border-radius: 10px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.payment-methods-header {
-    display: flex;
-    justify-content: space-between;
-    color: #aaa;
-    font-size: 12px;
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #3a4585;
-}
-
-.monto-header {
-    font-weight: bold;
-}
-
-.payment-method-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #3a4585;
-}
-
-.method-name {
-    font-weight: 600;
-    color: #fff;
-    font-size: 12px;
-}
-
-.method-amount {
-    font-weight: bold;
-    color: #66bb6a;
-    font-size: 14px;
-}
-
-.payment-total-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 18px 20px;
-    margin-top: auto;
-    background: #4caf50;
-    border-radius: 8px;
-}
-
-.total-payments-label {
-    font-weight: 900;
-    color: #fff;
-    font-size: 14px;
-}
-
-.total-payments-amount {
-    font-weight: 900;
-    color: #fff;
-    font-size: 22px;
-}
-
 /* ==========================================
    MODULO DE INVENTARIO
    ========================================== */
-.form-section {
-    background: #1a2555;
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    border: 2px solid #2a3f7f;
+.modulo-inventario-full {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    gap: 10px;
 }
 
-.form-section h3 {
-    color: #ffeb3b;
+.modal-header-mini h2 {
     font-size: 18px;
-    margin-bottom: 20px;
+    color: #64B5F6;
+    margin-bottom: 5px;
 }
 
-.product-form {
+/* --- FORMULARIO COMPACTO --- */
+.form-section-compacta {
+    background: #252525;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.form-row-mini {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-row {
-    display: flex;
-    gap: 15px;
-}
-
-.form-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group.flex-2 {
-    flex: 2;
+    gap: 10px;
+    align-items: flex-end;
 }
 
 .form-group label {
-    color: #aaa;
+    color: #ccc;
+    font-size: 11px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+.input-mini {
+    padding: 6px 10px;
+    /* CAMBIO: Input muy oscuro */
+    background: #121212;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: white;
     font-size: 13px;
-    margin-bottom: 8px;
-    font-weight: 600;
 }
 
-.form-input {
-    padding: 12px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #3f51b5;
-    background: #1a2555;
-}
-
-.form-input:read-only {
-    background: #1a2040;
-    color: #888;
-}
-
-.btn {
-    padding: 12px 25px;
+.btn-guardar-mini {
+    padding: 7px 15px;
+    background: #4caf50;
+    color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    font-size: 13px;
+    transition: 0.2s;
 }
 
-.btn-agregar {
-    background: #4caf50;
-    color: #fff;
-    margin-top: 24px;
+.btn-guardar-mini:hover { background: #66bb6a; }
+
+/* --- SECCIÓN TABLA --- */
+.productos-section-expandida {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    border-radius: 8px;
+    border: 1px solid #333;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.btn-agregar:hover {
-    background: #66bb6a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76,175,80,0.3);
-}
-
-/* Tabla de Productos */
-.productos-section {
-    background: #1a2555;
-    padding: 25px;
-    border-radius: 10px;
-    border: 2px solid #2a3f7f;
-}
-
-.productos-header-section {
+.productos-header-mini {
+    padding: 8px 15px;
+    background: #252525;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    border-bottom: 1px solid #333;
 }
 
-.productos-header-section h3 {
-    color: #ffeb3b;
-    font-size: 18px;
-}
-
-.search-box {
-    flex: 1;
-    max-width: 400px;
-    margin-left: 20px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 15px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
-    border-radius: 6px;
-    color: #fff;
+.productos-header-mini h3 {
     font-size: 14px;
+    color: #fff;
 }
 
-.search-input:focus {
-    outline: none;
-    border-color: #3f51b5;
+.search-input-mini {
+    padding: 6px 12px;
+    background: #121212;
+    border: 1px solid #1976D2;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    width: 250px;
 }
 
-.table-container {
-    overflow-x: auto;
-    max-height: 500px;
+/* CONTENEDOR DE SCROLL */
+.table-container-full {
+    flex: 1;
     overflow-y: auto;
+    background: #181818;
 }
 
-.productos-table {
+/* TABLA COMPACTA */
+.productos-table-compacta {
     width: 100%;
     border-collapse: collapse;
 }
 
-.productos-table thead {
-    background: #2a3565;
+.productos-table-compacta thead {
     position: sticky;
     top: 0;
-    z-index: 1;
+    /* CAMBIO: Cabecera de tabla azul */
+    background: #1565C0;
+    z-index: 5;
 }
 
-.productos-table th {
-    padding: 12px;
+.productos-table-compacta th {
+    padding: 8px 10px;
     text-align: left;
-    color: #ffeb3b;
-    font-weight: 600;
-    font-size: 13px;
-    border-bottom: 2px solid #3a4585;
-}
-
-.productos-table td {
-    padding: 12px;
     color: #fff;
-    border-bottom: 1px solid #2a3f7f;
+    border-bottom: 2px solid #0D47A1;
+    font-size: 12px;
 }
 
-.productos-table tbody tr:hover {
-    background: #252f5f;
+.productos-table-compacta td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #333;
+    font-size: 13px;
+    color: #eee;
 }
 
-.sin-productos {
-    text-align: center;
-    color: #888;
-    font-style: italic;
-    padding: 40px !important;
+.productos-table-compacta tr:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.btn-del {
-    padding: 8px 15px;
-    background: #f44336;
+.btn-modificar {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    background: #2196F3;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s;
 }
 
-.btn-del:hover {
-    background: #d32f2f;
-    transform: scale(1.05);
+.btn-modificar:hover {
+    background: #42a5f5;
+}
+
+/* SCROLLBAR FINO */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* ==========================================
    POS PÁGINA COMPLETA
    ========================================== */
 .pos-fullpage {
-    background: #0a0e27;
+    /* Fondo general POS */
+    background: #121212;
     overflow: auto;
 }
 
 .pos-page-header {
-    background: linear-gradient(180deg, #ffeb3b 0%, #fdd835 100%);
+    /* CAMBIO: Header Azul */
+    background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
     height: 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 30px;
-    border-bottom: 4px solid #000;
+    border-bottom: 4px solid #0D47A1;
     box-shadow: 0 3px 10px rgba(0,0,0,0.5);
 }
 
@@ -790,28 +541,22 @@ body {
 .btn-back-home {
     padding: 12px 25px;
     background: #fff;
-    color: #000;
-    border: 3px solid #000;
+    color: #0D47A1;
+    border: 3px solid #fff;
     border-radius: 8px;
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 3px 0px #000;
+    box-shadow: 0 3px 0px rgba(0,0,0,0.2);
 }
 
 .btn-back-home:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 0px #000;
-}
-
-.btn-back-home:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 0px #000;
 }
 
 .pos-page-header h1 {
-    color: #000;
+    color: #fff;
     font-size: 28px;
     font-weight: 900;
 }
@@ -825,19 +570,19 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #1a2555;
+    background: rgba(0,0,0,0.2);
     padding: 10px 20px;
     border-radius: 8px;
-    border: 2px solid #3f51b5;
+    border: 2px solid rgba(255,255,255,0.3);
 }
 
 .dolar-label {
-    color: #aaa;
+    color: #ddd;
     font-size: 14px;
 }
 
 .dolar-value {
-    color: #4caf50;
+    color: #fff;
     font-size: 20px;
     font-weight: bold;
 }
@@ -851,10 +596,11 @@ body {
 
 .pos-left-panel,
 .pos-right-panel {
-    background: #1a2555;
+    /* CAMBIO: Panel gris */
+    background: #1e1e1e;
     border-radius: 15px;
     padding: 25px;
-    border: 2px solid #2a3f7f;
+    border: 2px solid #333;
 }
 
 .pos-left-panel {
@@ -870,7 +616,7 @@ body {
 }
 
 .search-section h3 {
-    color: #ffeb3b;
+    color: #64B5F6;
     font-size: 16px;
     margin-bottom: 15px;
 }
@@ -878,8 +624,8 @@ body {
 .pos-search-input {
     width: 100%;
     padding: 15px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
+    background: #121212;
+    border: 2px solid #333;
     border-radius: 8px;
     color: #fff;
     font-size: 16px;
@@ -888,7 +634,7 @@ body {
 
 .pos-search-input:focus {
     outline: none;
-    border-color: #3f51b5;
+    border-color: #2196F3;
 }
 
 .productos-disponibles {
@@ -903,10 +649,10 @@ body {
 }
 
 .resultado-item {
-    background: #252f5f;
+    background: #2d2d2d;
     padding: 15px;
     border-radius: 8px;
-    border: 2px solid #3a4585;
+    border: 2px solid #444;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -915,8 +661,8 @@ body {
 }
 
 .resultado-item:hover {
-    background: #2a3565;
-    border-color: #4a5585;
+    background: #383838;
+    border-color: #2196F3;
     transform: translateX(5px);
 }
 
@@ -969,7 +715,7 @@ body {
 }
 
 .productos-agregados-section-full h3 {
-    color: #ffeb3b;
+    color: #64B5F6;
     font-size: 16px;
     margin-bottom: 15px;
 }
@@ -980,7 +726,8 @@ body {
 }
 
 .pos-carrito-table thead {
-    background: #2a3565;
+    /* CAMBIO: Cabecera carrito azul */
+    background: #1565C0;
     position: sticky;
     top: 0;
 }
@@ -988,16 +735,16 @@ body {
 .pos-carrito-table th {
     padding: 10px 8px;
     text-align: left;
-    color: #ffeb3b;
+    color: #fff;
     font-weight: 600;
     font-size: 12px;
-    border-bottom: 2px solid #3a4585;
+    border-bottom: 2px solid #0D47A1;
 }
 
 .pos-carrito-table td {
     padding: 10px 8px;
     color: #fff;
-    border-bottom: 1px solid #2a3f7f;
+    border-bottom: 1px solid #333;
     font-size: 13px;
 }
 
@@ -1015,17 +762,18 @@ body {
 }
 
 .totales-section-pos-simple {
-    background: #252f5f;
+    background: #252525;
     padding: 15px 20px;
     border-radius: 10px;
-    border: 2px solid #3a4585;
+    border: 2px solid #333;
 }
 
 .monto-total-display {
-    background: #2a3565;
+    background: #121212;
     padding: 15px 20px;
     border-radius: 8px;
     margin-bottom: 15px;
+    border: 1px solid #333;
 }
 
 .monto-valores-inline {
@@ -1075,46 +823,25 @@ body {
 }
 
 .btn-procesar {
-    background: #4caf50;
+    background: #1976D2; /* Botón procesar azul */
     color: #fff;
 }
 
 .btn-procesar:hover {
-    background: #66bb6a;
+    background: #2196F3;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76,175,80,0.3);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
 }
 
 .btn-limpiar {
-    background: #ff6b35;
+    background: #d32f2f;
     color: #fff;
 }
 
 .btn-limpiar:hover {
-    background: #ff8555;
+    background: #e53935;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255,107,53,0.3);
-}
-
-/* ==========================================
-   SCROLLBAR PERSONALIZADO
-   ========================================== */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #0f1535;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #3a4585;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #4a5585;
+    box-shadow: 0 4px 8px rgba(211, 47, 47, 0.3);
 }
 
 /* ==========================================
@@ -1140,9 +867,9 @@ body {
 }
 
 .modal-modificar {
-    background: #1a2555;
+    background: #1e1e1e;
     border-radius: 15px;
-    border: 3px solid #3f51b5;
+    border: 3px solid #1976D2;
     width: 600px;
     max-width: 90%;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -1161,10 +888,10 @@ body {
 }
 
 .modal-modificar-header {
-    background: #1e3a8a;
+    background: #1565C0;
     padding: 20px 30px;
     border-radius: 12px 12px 0 0;
-    border-bottom: 3px solid #3b82f6;
+    border-bottom: 3px solid #0D47A1;
 }
 
 .modal-modificar-header h2 {
@@ -1197,8 +924,8 @@ body {
 
 .input-modificar {
     padding: 12px 15px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
+    background: #121212;
+    border: 2px solid #333;
     border-radius: 8px;
     color: #fff;
     font-size: 15px;
@@ -1207,12 +934,12 @@ body {
 
 .input-modificar:focus {
     outline: none;
-    border-color: #3f51b5;
-    background: #1a2040;
+    border-color: #2196F3;
+    background: #000;
 }
 
 .input-modificar:read-only {
-    background: #1a2040;
+    background: #252525;
     color: #888;
     cursor: not-allowed;
 }
@@ -1224,10 +951,10 @@ body {
 }
 
 .ganancia-info {
-    background: #252f5f;
+    background: #252525;
     padding: 20px;
     border-radius: 10px;
-    border: 2px solid #3a4585;
+    border: 2px solid #333;
     display: flex;
     justify-content: space-around;
 }
@@ -1275,8 +1002,6 @@ body {
 
 .btn-confirmar:hover {
     background: #66bb6a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
 }
 
 .btn-volver {
@@ -1286,8 +1011,6 @@ body {
 
 .btn-volver:hover {
     background: #9e9e9e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(117,117,117,0.4);
 }
 
 .btn-eliminar {
@@ -1297,35 +1020,15 @@ body {
 
 .btn-eliminar:hover {
     background: #e53935;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(244,67,54,0.4);
-}
-
-.btn-modificar {
-    padding: 8px 15px;
-    background: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.btn-modificar:hover {
-    background: #42a5f5;
-    transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(33,150,243,0.4);
 }
 
 /* ==========================================
    MODAL DE TASA DEL DÓLAR
    ========================================== */
 .modal-tasa {
-    background: #1a2555;
+    background: #1e1e1e;
     border-radius: 15px;
-    border: 3px solid #3f51b5;
+    border: 3px solid #1976D2;
     width: 500px;
     max-width: 90%;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -1333,10 +1036,10 @@ body {
 }
 
 .modal-tasa-header {
-    background: #1e3a8a;
+    background: #1565C0;
     padding: 20px 30px;
     border-radius: 12px 12px 0 0;
-    border-bottom: 3px solid #3b82f6;
+    border-bottom: 3px solid #0D47A1;
 }
 
 .modal-tasa-header h2 {
@@ -1350,7 +1053,7 @@ body {
 }
 
 .tasa-actual-display {
-    background: #252f5f;
+    background: #252525;
     padding: 15px 20px;
     border-radius: 8px;
     margin-bottom: 25px;
@@ -1385,8 +1088,8 @@ body {
 .input-nueva-tasa {
     width: 100%;
     padding: 15px;
-    background: #0f1535;
-    border: 2px solid #2a3f7f;
+    background: #121212;
+    border: 2px solid #333;
     border-radius: 8px;
     color: #fff;
     font-size: 20px;
@@ -1397,8 +1100,7 @@ body {
 
 .input-nueva-tasa:focus {
     outline: none;
-    border-color: #3f51b5;
-    background: #1a2040;
+    border-color: #2196F3;
 }
 
 .modal-tasa-buttons {
@@ -1425,8 +1127,6 @@ body {
 
 .btn-tasa-confirmar:hover {
     background: #66bb6a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76,175,80,0.4);
 }
 
 .btn-tasa-cancelar {
@@ -1436,61 +1136,56 @@ body {
 
 .btn-tasa-cancelar:hover {
     background: #9e9e9e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(117,117,117,0.4);
 }
 
 /* ==========================================
-   MODAL DE CANTIDAD DE PRODUCTO
-   ========================================== */
-/* ==========================================
-   MODAL DE CANTIDAD DE PRODUCTO (COMPACTO)
+   MODAL DE CANTIDAD (COMPACTO)
    ========================================== */
 .modal-cantidad-producto {
-    background: #1a2555;
+    background: #1e1e1e;
     border-radius: 12px;
-    border: 2px solid #3f51b5;
-    width: 400px; /* Reducido de 550px */
+    border: 2px solid #2196F3;
+    width: 400px;
     max-width: 95%;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     animation: slideIn 0.2s ease-out;
 }
 
 .modal-cantidad-header {
-    background: #1e3a8a;
-    padding: 12px 20px; /* Más compacto */
+    background: #1565C0;
+    padding: 12px 20px;
     border-radius: 10px 10px 0 0;
-    border-bottom: 2px solid #3b82f6;
+    border-bottom: 2px solid #0D47A1;
 }
 
 .modal-cantidad-header h3 {
     color: #fff;
-    font-size: 16px; /* Texto más pequeño */
+    font-size: 16px;
     font-weight: 700;
     margin-bottom: 2px;
 }
 
 .codigo-producto-cantidad {
-    color: #94a3b8;
+    color: #ccc;
     font-size: 11px;
 }
 
 .modal-cantidad-body {
-    padding: 20px; /* Reducido de 30px */
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
 .precio-info-cantidad {
-    background: #161e44;
+    background: #252525;
     padding: 10px 15px;
     border-radius: 8px;
-    border: 1px solid #2a3f7f;
+    border: 1px solid #333;
 }
 
 .precio-label {
-    color: #94a3b8;
+    color: #aaa;
     font-size: 11px;
     font-weight: 600;
     margin-bottom: 5px;
@@ -1504,18 +1199,18 @@ body {
 }
 
 .precio-dolar {
-    color: #10b981;
-    font-size: 18px; /* Reducido */
+    color: #4caf50;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .precio-bs {
-    color: #6ee7b7;
+    color: #81c784;
     font-size: 14px;
 }
 
 .cantidad-input-section label {
-    color: #94a3b8;
+    color: #aaa;
     font-size: 12px;
     margin-bottom: 8px;
     display: block;
@@ -1527,22 +1222,22 @@ body {
     padding: 10px;
     background: #000;
     color: #fff;
-    border: 2px solid #3b82f6;
+    border: 2px solid #2196F3;
     border-radius: 8px;
-    font-size: 22px; /* Más balanceado */
+    font-size: 22px;
     font-weight: bold;
     text-align: center;
 }
 
 .total-producto-cantidad {
-    background: #065f46; /* Verde oscuro */
+    background: #1b5e20; /* Verde oscuro */
     padding: 12px;
     border-radius: 8px;
     text-align: center;
 }
 
 .total-label {
-    color: #a7f3d0;
+    color: #a5d6a7;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -1558,16 +1253,15 @@ body {
 
 .total-dolar {
     color: #fff;
-    font-size: 24px; /* Reducido de 32px */
+    font-size: 24px;
     font-weight: 900;
 }
 
 .total-bs {
-    color: #d1fae5;
+    color: #c8e6c9;
     font-size: 16px;
 }
 
-/* Botones más pequeños y en una sola línea */
 .modal-cantidad-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1586,55 +1280,51 @@ body {
 }
 
 .btn-cantidad-confirmar {
-    background: #10b981;
+    background: #4caf50;
     color: #fff;
 }
 
 .btn-cantidad-cancelar {
-    background: #4b5563;
+    background: #616161;
     color: #fff;
 }
 
-.btn-cantidad-confirmar:hover { background: #059669; }
-.btn-cantidad-cancelar:hover { background: #374151; }
+.btn-cantidad-confirmar:hover { background: #66bb6a; }
+.btn-cantidad-cancelar:hover { background: #757575; }
 
 /* ==========================================
    SELECCIÓN CON TECLADO
    ========================================== */
 .resultado-item.seleccionado {
-    background: #3a4585 !important;
-    border-color: #5a6fa5 !important;
+    background: #424242 !important;
+    border-color: #2196F3 !important;
     transform: translateX(8px);
-    box-shadow: 0 0 0 2px #3f51b5;
+    box-shadow: 0 0 0 2px #1976D2;
 }
 
 /* ==========================================
-   MODAL DE PAGOS MIXTOS (COMPACTO)
-   ========================================== */
-
-/* ==========================================
-   MODAL DE PAGOS MIXTOS (GRANDE Y SIN SCROLL)
+   MODAL DE PAGOS MIXTOS (GRANDE)
    ========================================== */
 
 .modal-pagos-mixtos {
-    width: 1100px; /* Volvemos al ancho grande */
-    max-height: 95vh; /* Evita que toque los bordes de la pantalla */
-    background: #111827;
-    border: 3px solid #374151;
+    width: 1100px;
+    max-height: 95vh;
+    background: #1e1e1e;
+    border: 3px solid #333;
     border-radius: 12px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Prohibido el scroll en el contenedor principal */
+    overflow: hidden;
 }
 
 .modal-pagos-header-compacto {
     padding: 15px 25px;
-    background: #1f2937;
+    background: #252525;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #374151;
+    border-bottom: 2px solid #333;
 }
 
 .modal-pagos-header-compacto h2 { font-size: 20px; margin: 0; color: #fff; }
@@ -1643,7 +1333,7 @@ body {
     display: flex;
     padding: 20px;
     gap: 20px;
-    align-items: flex-start; /* Alinea los paneles arriba */
+    align-items: flex-start;
 }
 
 /* --- PANEL IZQUIERDO --- */
@@ -1655,57 +1345,56 @@ body {
 }
 
 .total-venta-box-small {
-    background: #1f2937;
+    background: #252525;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
-    border: 1px solid #4b5563;
+    border: 1px solid #333;
 }
 
 .montos-principales .usd-big { 
     display: block; 
-    font-size: 50px; /* Grande y claro */
+    font-size: 50px; 
     font-weight: 900; 
-    color: #10b981; 
+    color: #4caf50; 
 }
 .montos-principales .bs-medium { 
     font-size: 24px; 
-    color: #6ee7b7; 
+    color: #81c784; 
 }
 
-/* Ajuste de la tabla para que no empuje el contenido hacia abajo */
 .tabla-scroll-mini {
-    height: 220px; /* Altura fija optimizada */
+    height: 220px;
     overflow-y: auto;
-    background: #000;
+    background: #121212;
     border-radius: 8px;
-    border: 1px solid #374151;
+    border: 1px solid #333;
 }
 
 .tabla-pagos-compacta { width: 100%; font-size: 14px; }
-.tabla-pagos-compacta td { padding: 10px; border-bottom: 1px solid #1f2937; }
+.tabla-pagos-compacta td { padding: 10px; border-bottom: 1px solid #252525; }
 
 /* --- PANEL DERECHO (Registro y Progreso) --- */
 .pagos-panel-derecho-compacto { 
     flex: 1.2; 
     display: flex; 
     flex-direction: column; 
-    gap: 12px; /* Espaciado controlado */
+    gap: 12px;
 }
 
 .registro-pago-card { 
-    background: #1f2937; 
+    background: #252525; 
     padding: 15px; 
     border-radius: 10px; 
-    border: 1px solid #4b5563;
+    border: 1px solid #333;
 }
 
 .input-monto-compacto {
     width: 100%;
     padding: 12px;
     background: #000;
-    color: #10b981;
-    border: 2px solid #374151;
+    color: #4caf50;
+    border: 2px solid #333;
     border-radius: 8px;
     font-size: 38px;
     font-weight: 900;
@@ -1715,15 +1404,14 @@ body {
 
 .input-monto-compacto:focus {
     outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+    border-color: #4caf50;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.1);
 }
 
-/* Área de Progreso: Aquí quitamos el riesgo de scroll */
 .resumen-pago-card {
-    background: #111827;
+    background: #121212;
     padding: 15px;
-    border: 1px solid #374151;
+    border: 1px solid #333;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -1738,11 +1426,11 @@ body {
 .barra-fondo-mini { 
     flex: 1; 
     height: 12px; 
-    background: #374151; 
+    background: #333; 
     border-radius: 6px; 
     overflow: hidden; 
 }
-.barra-relleno-mini { height: 100%; background: #10b981; width: 0%; transition: 0.3s; }
+.barra-relleno-mini { height: 100%; background: #4caf50;WX width: 0%; transition: 0.3s; }
 
 .linea-estado { 
     display: flex; 
@@ -1752,10 +1440,10 @@ body {
 
 /* Área de Cambio */
 .cambio-box-mini {
-    background: #1f2937;
+    background: #252525;
     padding: 12px;
     border-radius: 10px;
-    border: 1px solid #3b82f6;
+    border: 1px solid #2196F3;
 }
 
 .inputs-cambio-row { display: flex; gap: 8px; margin-top: 5px; }
@@ -1763,30 +1451,29 @@ body {
     flex: 1; 
     padding: 10px; 
     background: #000; 
-    border: 2px solid #3b82f6; 
-    color: #3b82f6; 
+    border: 2px solid #2196F3; 
+    color: #2196F3; 
     border-radius: 6px; 
     font-size: 16px; 
     text-align: center;
     font-weight: bold;
 }
 
-/* Botón Finalizar siempre al fondo del panel derecho */
 .btn-finalizar-venta-pago-mini {
     width: 100%;
     padding: 18px;
-    background: #10b981;
+    background: #4caf50;
     color: white;
     border: none;
     border-radius: 10px;
     font-size: 18px;
     font-weight: 800;
     cursor: pointer;
-    margin-top: auto; /* Empuja el botón al final del contenedor derecho */
+    margin-top: auto;
 }
 
 .btn-finalizar-venta-pago-mini:disabled { 
-    background: #374151; 
+    background: #444; 
     opacity: 0.5; 
 }
 
@@ -1794,31 +1481,30 @@ body {
 .select-compacto {
     width: 100%;
     padding: 12px 15px;
-    background-color: #0f172a; /* Azul muy oscuro */
-    color: #fde047; /* Texto amarillo para resaltar los atajos F4-F9 */
-    border: 2px solid #3b82f6; /* Borde azul brillante */
+    background-color: #121212;
+    color: #64B5F6; /* Azul claro para resaltar */
+    border: 2px solid #2196F3;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    appearance: none; /* Quita la flecha por defecto */
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232196F3' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1em;
     transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .select-compacto:focus {
     outline: none;
-    border-color: #fde047; /* Cambia a amarillo al seleccionar */
-    box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.2);
+    border-color: #64B5F6;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
     transform: translateY(-1px);
 }
 
 .select-compacto option {
-    background-color: #1f2937;
+    background-color: #252525;
     color: #fff;
     padding: 10px;
 }
@@ -1828,7 +1514,7 @@ body {
     width: 100%;
     padding: 14px;
     margin-top: 5px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -1842,23 +1528,20 @@ body {
     justify-content: center;
     gap: 8px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    border-bottom: 3px solid #1e40af;
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+    border-bottom: 3px solid #0D47A1;
 }
 
 .btn-agregar-compacto:hover {
-    background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
 }
 
 .btn-agregar-compacto:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
-    border-bottom: 1px solid #1e40af;
+    border-bottom: 1px solid #0D47A1;
 }
 
-/* Un pequeño detalle para el texto "Enter" dentro del botón */
 .btn-agregar-compacto::after {
     content: "↵";
     font-size: 18px;
@@ -1872,7 +1555,7 @@ body {
 }
 
 .fila-carrito-clicable:hover {
-    background: #2a3f7f !important;
+    background: #333 !important;
 }
 
 /* Estilo para la cantidad fija */
@@ -1881,7 +1564,7 @@ body {
 }
 
 .badge-cantidad {
-    background: #3b82f6;
+    background: #2196F3;
     color: white;
     padding: 4px 12px;
     border-radius: 15px;
@@ -1896,150 +1579,21 @@ body {
     z-index: 10;
 }
 
-/* --- CONTENEDOR RAIZ DE INVENTARIO DE BUSQUEDA --- */
-
-.modulo-inventario-full {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 120px); /* Ajustado para ganar cada pixel posible */
-    gap: 10px;
-}
-
-.modal-header-mini h2 {
-    font-size: 18px;
-    color: #ffeb3b;
-    margin-bottom: 5px;
-}
-
-/* --- FORMULARIO COMPACTO (Ahorra mucho espacio vertical) --- */
-.form-section-compacta {
-    background: #1a2555;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: 1px solid #2a3f7f;
-}
-
-.form-row-mini {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end; /* Alinea etiquetas arriba e inputs abajo */
-}
-
-.form-group label {
-    color: #aaa;
-    font-size: 11px; /* Texto pequeño */
-    margin-bottom: 3px;
-    font-weight: bold;
-}
-
-.input-mini {
-    padding: 6px 10px;
-    background: #0f1535;
-    border: 1px solid #3a4585;
-    border-radius: 4px;
-    color: white;
-    font-size: 13px;
-}
-
-.btn-guardar-mini {
-    padding: 7px 15px;
-    background: #4caf50;
-    color: white;
+/* Botón cerrar modal pequeño */
+.btn-close-modal-small {
+    background: transparent;
     border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 13px;
-    transition: 0.2s;
-}
-
-.btn-guardar-mini:hover { background: #66bb6a; }
-
-/* --- SECCIÓN TABLA (EXPANDIDA AL MÁXIMO) --- */
-.productos-section-expandida {
-    flex: 1; /* Ocupa todo el resto de la pantalla */
-    display: flex;
-    flex-direction: column;
-    background: #1a2555;
-    border-radius: 8px;
-    border: 1px solid #2a3f7f;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.productos-header-mini {
-    padding: 8px 15px;
-    background: #1e295a;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.productos-header-mini h3 {
-    font-size: 14px;
     color: #fff;
+    font-size: 20px;
+    cursor: pointer;
 }
+.btn-close-modal-small:hover { color: #f44336; }
 
-.search-input-mini {
-    padding: 6px 12px;
-    background: #0a0e27;
-    border: 1px solid #3f51b5;
-    border-radius: 4px;
-    color: white;
-    font-size: 13px;
-    width: 250px;
+/* Botón eliminar pago */
+.btn-eliminar-pago {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }
-
-/* CONTENEDOR DE SCROLL */
-.table-container-full {
-    flex: 1;
-    overflow-y: auto;
-    background: #0f1535;
-}
-
-/* TABLA COMPACTA */
-.productos-table-compacta {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.productos-table-compacta thead {
-    position: sticky;
-    top: 0;
-    background: #1e295a;
-    z-index: 5;
-}
-
-.productos-table-compacta th {
-    padding: 8px 10px;
-    text-align: left;
-    color: #ffeb3b;
-    border-bottom: 2px solid #3a4585;
-    font-size: 12px;
-}
-
-.productos-table-compacta td {
-    padding: 6px 10px; /* Celdas mucho más delgadas */
-    border-bottom: 1px solid #1a2555;
-    font-size: 13px;
-    color: #eee;
-}
-
-.productos-table-compacta tr:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-/* Botón modificar más pequeño */
-.btn-modificar {
-    padding: 4px 8px !important;
-    font-size: 11px !important;
-}
-
-/* SCROLLBAR FINO */
-.table-container-full::-webkit-scrollbar {
-    width: 6px;
-}
-.table-container-full::-webkit-scrollbar-thumb {
-    background: #3a4585;
-    border-radius: 3px;
-}
+.btn-eliminar-pago:hover { transform: scale(1.2); }
