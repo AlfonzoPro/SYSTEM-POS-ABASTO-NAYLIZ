@@ -1430,7 +1430,7 @@ body {
     border-radius: 6px; 
     overflow: hidden; 
 }
-.barra-relleno-mini { height: 100%; background: #4caf50;WX width: 0%; transition: 0.3s; }
+.barra-relleno-mini { height: 100%; background: #4caf50; width: 0%; transition: 0.3s; }
 
 .linea-estado { 
     display: flex; 
