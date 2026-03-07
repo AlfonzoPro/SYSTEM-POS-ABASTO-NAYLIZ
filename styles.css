@@ -202,6 +202,28 @@ body {
 /* Botón Ver Días Anteriores */
 .sidebar-button-section {
     margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-ventas-hoy-sidebar {
+    width: 100%;
+    padding: 15px;
+    background: #1565c0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-ventas-hoy-sidebar:hover {
+    background: #1976d2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(21,101,192,0.3);
 }
 
 .btn-ver-dias-sidebar {
@@ -1879,3 +1901,390 @@ body {
         font-size: 10px;
     }
 }
+/* ==========================================
+   MODAL CALENDARIO
+   ========================================== */
+.modal-calendario {
+    background: #1e1e1e;
+    border-radius: 12px;
+    border: 3px solid #1976D2;
+    width: 460px;
+    max-width: 95vw;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: slideIn 0.3s;
+}
+
+.modal-cal-header {
+    background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #0D47A1;
+}
+
+.modal-cal-header h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 900;
+}
+
+.modal-cal-body {
+    padding: 20px;
+    background: #1e1e1e;
+}
+
+/* Selector rápido mes/año */
+.cal-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.cal-btn-nav {
+    background: #2d2d2d;
+    border: 2px solid #1976D2;
+    color: #fff;
+    border-radius: 6px;
+    padding: 7px 13px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.cal-btn-nav:hover { background: #1976D2; }
+
+.cal-nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+}
+
+.cal-titulo-mes {
+    font-size: 15px;
+    font-weight: bold;
+    color: #64B5F6;
+}
+
+.cal-selector-rapido {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.cal-select-mes,
+.cal-select-anio {
+    background: #121212;
+    border: 2px solid #1976D2;
+    color: #fff;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: border-color 0.2s;
+}
+.cal-select-mes:focus,
+.cal-select-anio:focus {
+    outline: none;
+    border-color: #64B5F6;
+}
+.cal-select-mes option,
+.cal-select-anio option {
+    background: #252525;
+}
+
+.cal-grid-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 4px;
+}
+.cal-grid-header span {
+    text-align: center;
+    font-size: 11px;
+    color: #64B5F6;
+    padding: 4px 0;
+    font-weight: 600;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.cal-dia {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #888;
+    position: relative;
+    cursor: default;
+    background: #252525;
+}
+
+.cal-dia.vacio { background: transparent; }
+
+.cal-dia.futuro { color: #444; background: #1a1a1a; }
+
+.cal-dia.hoy {
+    border: 2px solid #1976D2;
+    color: #64B5F6;
+    font-weight: bold;
+    background: #1a2a3a;
+}
+
+.cal-dia.con-ventas {
+    background: #1b3a1b;
+    color: #4caf50;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #2e7d32;
+}
+.cal-dia.con-ventas:hover { background: #2a5a2a; transform: scale(1.1); box-shadow: 0 2px 8px rgba(76,175,80,0.3); }
+
+.cal-dia.seleccionado {
+    background: #1565C0 !important;
+    color: #fff !important;
+    border: 2px solid #64B5F6 !important;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(33,150,243,0.4);
+}
+
+.cal-punto {
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    background: #4caf50;
+    border-radius: 50%;
+}
+.cal-dia.seleccionado .cal-punto { background: #90CAF9; }
+
+/* Resumen del día en el calendario */
+.resumen-dia-cal {
+    margin-top: 14px;
+    background: #252525;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #333;
+}
+
+.cal-resumen-titulo {
+    font-size: 12px;
+    font-weight: bold;
+    color: #64B5F6;
+    margin-bottom: 10px;
+}
+
+.cal-resumen-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.cal-res-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #aaa;
+    background: #1e1e1e;
+    padding: 5px 8px;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+.cal-res-item b { color: #fff; }
+
+.cal-resumen-total {
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: #4caf50;
+    border-top: 1px solid #333;
+    padding-top: 8px;
+}
+
+/* ==========================================
+   MODAL VENTAS DEL DÍA
+   ========================================== */
+.modal-ventas-dia {
+    background: #1e1e1e;
+    border-radius: 12px;
+    border: 3px solid #1976D2;
+    width: 860px;
+    max-width: 96vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: slideIn 0.3s;
+}
+
+.modal-ventas-dia-header {
+    background: linear-gradient(180deg, #1976D2 0%, #1565C0 100%);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    border-bottom: 3px solid #0D47A1;
+}
+.modal-ventas-dia-header h2 {
+    margin: 0;
+    font-size: 15px;
+    color: #fff;
+    font-weight: 900;
+}
+
+.modal-ventas-dia-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    background: #1e1e1e;
+}
+
+/* Panel izquierdo: lista de facturas */
+.lista-facturas-panel {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid #333;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #181818;
+}
+
+.lista-facturas-scroll {
+    overflow-y: auto;
+    flex: 1;
+    padding: 8px;
+}
+
+.factura-item {
+    background: #252525;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.factura-item:hover { background: #2d2d2d; border-color: #1976D2; }
+.factura-item.activa { background: #1565c0; border-color: #1976d2; }
+
+.factura-item-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+.factura-num { font-weight: bold; color: #64B5F6; font-size: 13px; }
+.factura-hora { color: #aaa; font-size: 11px; }
+.factura-item-bot { display: flex; justify-content: space-between; align-items: center; }
+.factura-total { color: #4caf50; font-weight: bold; font-size: 13px; }
+.factura-metodos { color: #888; font-size: 10px; }
+.factura-vacia { color: #555; text-align: center; padding: 30px 10px; font-size: 13px; }
+
+/* Panel derecho: detalle */
+.detalle-factura-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #1e1e1e;
+}
+
+.detalle-vacio {
+    color: #555;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 14px;
+}
+
+.detalle-factura-contenido { display: flex; flex-direction: column; gap: 12px; }
+
+.detalle-header-fact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252525;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #aaa;
+    border: 1px solid #333;
+}
+
+.btn-reimprimir {
+    background: #2e7d32;
+    border: 1px solid #4caf50;
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.btn-reimprimir:hover { background: #388e3c; }
+
+.detalle-seccion-titulo {
+    font-size: 11px;
+    font-weight: bold;
+    color: #64B5F6;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4px;
+}
+
+.detalle-tabla-prods {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.detalle-tabla-prods th {
+    text-align: left;
+    padding: 6px 8px;
+    background: #1565C0;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+}
+.detalle-tabla-prods td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+}
+.td-center { text-align: center; }
+.td-right  { text-align: right; }
+
+.detalle-totales, .detalle-pagos {
+    background: #252525;
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid #333;
+}
+
+.detalle-pago-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #aaa;
+}
+.detalle-pago-row b { color: #fff; }

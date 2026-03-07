@@ -752,3 +752,298 @@ function generarTicketHTML(venta) {
         <br>
     `;
 }
+// ==========================================
+// CALENDARIO - BUSCAR DÍAS ANTERIORES
+// ==========================================
+let calMes = new Date().getMonth();
+let calAnio = new Date().getFullYear();
+let todasLasVentas = [];
+
+async function abrirBuscadorFechas() {
+    if (todasLasVentas.length === 0) {
+        const res = await fetch('/api/ventas');
+        todasLasVentas = await res.json();
+    }
+    calMes  = new Date().getMonth();
+    calAnio = new Date().getFullYear();
+    document.getElementById('resumenDiaSeleccionado').style.display = 'none';
+
+    // Poblar selector de años dinámicamente según las ventas registradas
+    const anioActual = new Date().getFullYear();
+    let anioMinimo = anioActual;
+    if (todasLasVentas.length > 0) {
+        anioMinimo = todasLasVentas.reduce((min, v) => {
+            const y = new Date(v.fecha).getFullYear();
+            return y < min ? y : min;
+        }, anioActual);
+    }
+    const selectAnio = document.getElementById('calSelectAnio');
+    if (selectAnio) {
+        selectAnio.innerHTML = '';
+        for (let y = anioActual; y >= anioMinimo; y--) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            selectAnio.appendChild(opt);
+        }
+    }
+
+    renderizarCalendario();
+    document.getElementById('modalCalendario').style.display = 'flex';
+}
+
+function cerrarCalendario() {
+    document.getElementById('modalCalendario').style.display = 'none';
+}
+
+function cambiarMesCalendario(dir) {
+    calMes += dir;
+    if (calMes > 11) { calMes = 0; calAnio++; }
+    if (calMes < 0)  { calMes = 11; calAnio--; }
+    document.getElementById('resumenDiaSeleccionado').style.display = 'none';
+    renderizarCalendario();
+}
+
+function irAMesAnio() {
+    const selMes  = document.getElementById('calSelectMes');
+    const selAnio = document.getElementById('calSelectAnio');
+    if (!selMes || !selAnio) return;
+    calMes  = parseInt(selMes.value);
+    calAnio = parseInt(selAnio.value);
+    document.getElementById('resumenDiaSeleccionado').style.display = 'none';
+    renderizarCalendario();
+}
+
+function renderizarCalendario() {
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    document.getElementById('calTituloMes').textContent = `${meses[calMes]} ${calAnio}`;
+
+    // Sincronizar los selectores con el mes/año navegado
+    const selMes  = document.getElementById('calSelectMes');
+    const selAnio = document.getElementById('calSelectAnio');
+    if (selMes)  selMes.value  = calMes;
+    if (selAnio) selAnio.value = calAnio;
+
+    // Fechas con ventas en este mes
+    const fechasConVentas = new Set(
+        todasLasVentas.map(v => {
+            const f = new Date(v.fecha);
+            return `${f.getFullYear()}-${f.getMonth()}-${f.getDate()}`;
+        })
+    );
+
+    const primerDia = new Date(calAnio, calMes, 1).getDay();
+    const diasEnMes = new Date(calAnio, calMes + 1, 0).getDate();
+    const hoy = new Date();
+
+    let html = '';
+    // Celdas vacías antes del primer día
+    for (let i = 0; i < primerDia; i++) html += '<div class="cal-dia vacio"></div>';
+
+    for (let d = 1; d <= diasEnMes; d++) {
+        const clave = `${calAnio}-${calMes}-${d}`;
+        const tieneVentas = fechasConVentas.has(clave);
+        const esHoy = (d === hoy.getDate() && calMes === hoy.getMonth() && calAnio === hoy.getFullYear());
+        const esFuturo = new Date(calAnio, calMes, d) > hoy;
+
+        let clases = 'cal-dia';
+        if (esHoy) clases += ' hoy';
+        if (tieneVentas) clases += ' con-ventas';
+        if (esFuturo) clases += ' futuro';
+
+        const onclick = tieneVentas && !esFuturo
+            ? `onclick="seleccionarDiaCalendario(${d})"`
+            : '';
+
+        html += `<div class="${clases}" ${onclick}>${d}${tieneVentas ? '<span class="cal-punto"></span>' : ''}</div>`;
+    }
+
+    document.getElementById('calGrid').innerHTML = html;
+}
+
+function seleccionarDiaCalendario(dia) {
+    const fechaSelStr = `${calAnio}-${String(calMes+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+    const ventasDia = todasLasVentas.filter(v => {
+        const f = new Date(v.fecha);
+        const fStr = `${f.getFullYear()}-${String(f.getMonth()+1).padStart(2,'0')}-${String(f.getDate()).padStart(2,'0')}`;
+        return fStr === fechaSelStr;
+    });
+
+    if (ventasDia.length === 0) return;
+
+    // Calcular resumen igual que actualizarResumenDelDia
+    let efectivoUSD = 0, efectivoBs = 0, biopago = 0, puntoVenta = 0, pagoMovil = 0, notaCredito = 0;
+    ventasDia.forEach(v => {
+        (v.mediosPago || []).forEach(p => {
+            switch(p.metodo) {
+                case 'EFECTIVO_USD':  efectivoUSD  += p.montoUSD; break;
+                case 'EFECTIVO_BS':   efectivoBs   += (p.montoBs || p.montoUSD * v.precioDolarUsado); break;
+                case 'BIOPAGO':       biopago      += p.montoUSD; break;
+                case 'PUNTO_VENTA':   puntoVenta   += p.montoUSD; break;
+                case 'PAGO_MOVIL':    pagoMovil    += p.montoUSD; break;
+                case 'NOTA_CREDITO':  notaCredito  += p.montoUSD; break;
+            }
+        });
+    });
+    const totalUSD = efectivoUSD + (efectivoBs / tasaDolar) + biopago + puntoVenta + pagoMovil + notaCredito;
+
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const fechaLabel = `${dia} ${meses[calMes]} ${calAnio}`;
+
+    const div = document.getElementById('resumenDiaSeleccionado');
+    div.style.display = 'block';
+    div.innerHTML = `
+        <div class="cal-resumen-titulo">📊 Resumen — ${fechaLabel} (${ventasDia.length} facturas)</div>
+        <div class="cal-resumen-grid">
+            <div class="cal-res-item"><span>💵 Efectivo $</span><b>$${efectivoUSD.toFixed(2)}</b></div>
+            <div class="cal-res-item"><span>💵 Efectivo Bs</span><b>Bs ${efectivoBs.toFixed(2)}</b></div>
+            <div class="cal-res-item"><span>💳 Biopago</span><b>$${biopago.toFixed(2)}</b></div>
+            <div class="cal-res-item"><span>💳 Punto Venta</span><b>$${puntoVenta.toFixed(2)}</b></div>
+            <div class="cal-res-item"><span>📱 Pago Móvil</span><b>$${pagoMovil.toFixed(2)}</b></div>
+            <div class="cal-res-item"><span>📄 Nota Crédito</span><b>$${notaCredito.toFixed(2)}</b></div>
+        </div>
+        <div class="cal-resumen-total">TOTAL: $${totalUSD.toFixed(2)}</div>
+    `;
+
+    // Marcar día seleccionado visualmente
+    document.querySelectorAll('.cal-dia').forEach(el => el.classList.remove('seleccionado'));
+    event.currentTarget.classList.add('seleccionado');
+}
+
+// ==========================================
+// VENTAS DEL DÍA - LISTA DE FACTURAS
+// ==========================================
+async function abrirVentasDelDia() {
+    if (todasLasVentas.length === 0) {
+        const res = await fetch('/api/ventas');
+        todasLasVentas = await res.json();
+    }
+
+    const hoy = new Date();
+    const hoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+
+    const ventasHoy = todasLasVentas.filter(v => {
+        const f = new Date(v.fecha);
+        const fStr = `${f.getFullYear()}-${String(f.getMonth()+1).padStart(2,'0')}-${String(f.getDate()).padStart(2,'0')}`;
+        return fStr === hoyStr;
+    }).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    document.getElementById('tituloFechaVentas').textContent =
+        `${hoy.getDate()} ${meses[hoy.getMonth()]} ${hoy.getFullYear()}`;
+
+    const lista = document.getElementById('listaFacturas');
+    if (ventasHoy.length === 0) {
+        lista.innerHTML = '<div class="factura-vacia">No hay ventas registradas hoy</div>';
+    } else {
+        lista.innerHTML = ventasHoy.map((v, i) => {
+            const f = new Date(v.fecha);
+            const hora = `${String(f.getHours()).padStart(2,'0')}:${String(f.getMinutes()).padStart(2,'0')}`;
+            const metodos = [...new Set((v.mediosPago || []).map(p => getNombreMetodoCorto(p.metodo)))].join(' + ');
+            return `
+                <div class="factura-item" onclick="verDetalleFactura(${i})" id="factura-item-${i}">
+                    <div class="factura-item-top">
+                        <span class="factura-num">#${ventasHoy.length - i}</span>
+                        <span class="factura-hora">${hora}</span>
+                    </div>
+                    <div class="factura-item-bot">
+                        <span class="factura-total">$${v.totalDolares.toFixed(2)}</span>
+                        <span class="factura-metodos">${metodos}</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // Guardar ventas de hoy en variable accesible
+    window._ventasHoyModal = ventasHoy;
+    document.getElementById('detalleFacturaPanel').innerHTML = '<div class="detalle-vacio">← Selecciona una factura</div>';
+    document.getElementById('modalVentasDia').style.display = 'flex';
+}
+
+function cerrarVentasDia() {
+    document.getElementById('modalVentasDia').style.display = 'none';
+}
+
+function getNombreMetodoCorto(m) {
+    const map = {'EFECTIVO_USD':'Efec$','EFECTIVO_BS':'EfecBs','BIOPAGO':'Bio','PUNTO_VENTA':'PV','PAGO_MOVIL':'PM','NOTA_CREDITO':'NC'};
+    return map[m] || m;
+}
+
+function verDetalleFactura(index) {
+    const v = window._ventasHoyModal[index];
+    if (!v) return;
+
+    // Resaltar seleccionado
+    document.querySelectorAll('.factura-item').forEach(el => el.classList.remove('activa'));
+    const el = document.getElementById(`factura-item-${index}`);
+    if (el) el.classList.add('activa');
+
+    const f = new Date(v.fecha);
+    const fechaStr = `${String(f.getDate()).padStart(2,'0')}/${String(f.getMonth()+1).padStart(2,'0')}/${f.getFullYear()}`;
+    const horaStr  = `${String(f.getHours()).padStart(2,'0')}:${String(f.getMinutes()).padStart(2,'0')}`;
+
+    const productosHTML = (v.productos || []).map(p => `
+        <tr>
+            <td>${p.nombre}</td>
+            <td class="td-center">${p.cantidad}</td>
+            <td class="td-right">$${p.precioVenta.toFixed(2)}</td>
+            <td class="td-right">$${(p.precioVenta * p.cantidad).toFixed(2)}</td>
+        </tr>`).join('');
+
+    const pagosHTML = (v.mediosPago || []).map(p => {
+        const val = p.moneda === 'USD' ? `$${p.monto.toFixed(2)}` : `Bs ${p.monto.toFixed(2)}`;
+        return `<div class="detalle-pago-row"><span>${getNombreMetodo(p.metodo)}</span><b>${val}</b></div>`;
+    }).join('');
+
+    document.getElementById('detalleFacturaPanel').innerHTML = `
+        <div class="detalle-factura-contenido">
+            <div class="detalle-header-fact">
+                <span>📅 ${fechaStr} — ${horaStr}</span>
+                <button class="btn-reimprimir" onclick="reimprimirTicket(${index})">🖨️ Reimprimir</button>
+            </div>
+            <div class="detalle-seccion-titulo">PRODUCTOS</div>
+            <table class="detalle-tabla-prods">
+                <thead><tr><th>Producto</th><th>Cant</th><th>P/U</th><th>Total</th></tr></thead>
+                <tbody>${productosHTML}</tbody>
+            </table>
+            <div class="detalle-seccion-titulo">TOTALES</div>
+            <div class="detalle-totales">
+                <div class="detalle-pago-row"><span>Total Bs:</span><b>Bs ${v.totalBolivares.toFixed(2)}</b></div>
+                <div class="detalle-pago-row"><span>Total $:</span><b>$${v.totalDolares.toFixed(2)}</b></div>
+                <div class="detalle-pago-row"><span>Tasa:</span><b>Bs ${v.precioDolarUsado.toFixed(2)}</b></div>
+            </div>
+            <div class="detalle-seccion-titulo">PAGOS</div>
+            <div class="detalle-pagos">${pagosHTML}</div>
+        </div>`;
+}
+
+function reimprimirTicket(index) {
+    const v = window._ventasHoyModal[index];
+    if (!v) return;
+
+    // Crear contenedor temporal si no existe (cuando se llama desde index.html)
+    let cont = document.getElementById('ticket-impresion');
+    let contCreado = false;
+    if (!cont) {
+        cont = document.createElement('div');
+        cont.id = 'ticket-impresion';
+        cont.className = 'ticket-oculto';
+        document.body.appendChild(cont);
+        contCreado = true;
+    }
+
+    // Reutilizar exactamente la misma función que usa el POS al cobrar e imprimir
+    generarTicketHTML(v);
+
+    setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+            if (contCreado) {
+                cont.remove();
+            } else {
+                cont.innerHTML = '';
+            }
+        }, 500);
+    }, 300);
+}
